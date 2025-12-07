@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boarding - 모든 금융을 한 손에 담다</title>
     <style>
-        /* CSS 코드는 가독성을 위해 <style> 태그 내에 포함했습니다. */
         :root {
             --primary-color: #2D6CFF; /* 토스 유사 블루 */
             --background-color: #F8F9FA;
@@ -13,6 +12,8 @@
             --text-color: #1F2327;
             --sub-text-color: #79818B;
             --button-bg: #EAEAEA;
+            --success: #0ABF53;
+            --warning: #FF9800;
         }
 
         body {
@@ -115,6 +116,17 @@
             font-weight: 600;
             color: var(--primary-color);
             cursor: pointer;
+            padding: 8px 6px;
+            border-radius: 12px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #f3f6ff;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
         }
 
         .action-btn i {
@@ -168,9 +180,185 @@
             margin: 20px;
             border-radius: 15px;
             text-align: center;
-            font-weight: 600;
-            color: #FF9800;
+            font-weight: 700;
+            color: var(--warning);
+            cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(255, 152, 0, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
+
+        .gamification-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.25);
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 20px 20px 8px;
+        }
+
+        .timeline {
+            margin: 0 20px 20px;
+            background: var(--card-background);
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 10px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #eef3ff;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .timeline-text {
+            flex: 1;
+        }
+
+        .timeline-text strong {
+            display: block;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .timeline-text span {
+            color: var(--sub-text-color);
+            font-size: 12px;
+        }
+
+        .timeline-amount {
+            font-weight: 800;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #f3f6ff;
+            color: var(--primary-color);
+            margin-left: 8px;
+        }
+
+        .notice {
+            margin: 0 20px 12px;
+            padding: 12px 14px;
+            background: #f2f7ff;
+            color: var(--text-color);
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: inset 0 0 0 1px rgba(45,108,255,0.06);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .modal {
+            background: #fff;
+            width: 360px;
+            max-width: 100%;
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--sub-text-color);
+        }
+
+        .modal input, .modal select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn.primary { background: var(--primary-color); color: #fff; }
+        .btn.ghost { background: #f6f7fb; color: var(--text-color); }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 12;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .info-row small { color: var(--sub-text-color); }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -186,7 +374,11 @@
 
     <div class="main-balance">
         <div class="title">총 자산</div>
-        <div class="amount">₩1,540,000</div>
+        <div class="amount" id="total-assets">₩0</div>
+        <div class="info-row">
+            <small>포인트: <span id="point-balance">0P</span></small>
+            <button class="detail-btn" id="reset-btn" style="border:none;">데이터 초기화</button>
+        </div>
     </div>
 
     <div class="account-card">
@@ -195,23 +387,31 @@
             <a href="#" class="detail-btn">관리 <i class="fas fa-chevron-right"></i></a>
         </div>
         <div class="account-balance">
-            <div class="amount" style="font-size: 24px; font-weight: 800;">₩840,000</div>
-            <div class="title" style="font-size: 12px; color: #FF0000; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
+            <div class="amount" id="card-balance" style="font-size: 24px; font-weight: 800;">₩0</div>
+            <div class="title" id="refund-alert" style="font-size: 12px; color: #FF0000; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
         </div>
         <div class="account-actions">
-            <div class="action-btn">
+            <div class="action-btn" data-action="charge">
                 <i class="fas fa-wallet"></i> 충전
             </div>
-            <div class="action-btn">
+            <div class="action-btn" data-action="transfer">
                 <i class="fas fa-exchange-alt"></i> 이체
             </div>
-            <div class="action-btn">
+            <div class="action-btn" data-action="remit">
                 <i class="fas fa-plane-departure"></i> 해외 송금
             </div>
         </div>
     </div>
 
-    <div class="gamification-banner">
+    <div class="notice" id="visa-notice">
+        <i class="fas fa-flag"></i>
+        <div>
+            <strong>D-90 비자 만료일 알림</strong><br>
+            <span id="visa-days">체류 만료 90일 전 환불 안내 메시지가 발송됩니다.</span>
+        </div>
+    </div>
+
+    <div class="gamification-banner" id="mission-banner">
         <i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>
     </div>
 
@@ -245,7 +445,206 @@
             </div>
         </div>
     </div>
+
+    <div class="section-title">실시간 활동 로그</div>
+    <div class="timeline" id="timeline"></div>
 </div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+        <h3 id="modal-title">금액 입력</h3>
+        <label for="amount-input">금액 (₩)</label>
+        <input type="number" id="amount-input" min="0" inputmode="numeric" placeholder="예: 50000">
+        <div id="extra-field" style="display:none; margin-top:12px;">
+            <label for="select-field">해외 송금 통화</label>
+            <select id="select-field">
+                <option value="USD">USD (수수료 5,000원)</option>
+                <option value="EUR">EUR (수수료 4,000원)</option>
+                <option value="JPY">JPY (수수료 3,000원)</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn ghost" id="cancel-btn">취소</button>
+            <button class="btn primary" id="confirm-btn">확인</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    const state = {
+        totalAssets: 1540000,
+        cardBalance: 840000,
+        points: 12000,
+        missionAvailable: true,
+        visaDday: 88,
+        timeline: [
+            { icon: 'fa-wallet', title: '선불계좌 충전', desc: '간편 충전 성공', amount: '+₩200,000' },
+            { icon: 'fa-plane', title: '항공권 결제', desc: 'Korea → USA', amount: '-₩650,000' },
+            { icon: 'fa-coins', title: '환전 목표 등록', desc: '달러 목표환율 1,320원', amount: '알림 ON' },
+        ],
+    };
+
+    const el = {
+        totalAssets: document.getElementById('total-assets'),
+        cardBalance: document.getElementById('card-balance'),
+        pointBalance: document.getElementById('point-balance'),
+        visaDays: document.getElementById('visa-days'),
+        timeline: document.getElementById('timeline'),
+        missionBanner: document.getElementById('mission-banner'),
+        refundAlert: document.getElementById('refund-alert'),
+        resetBtn: document.getElementById('reset-btn'),
+        modalBackdrop: document.getElementById('modal-backdrop'),
+        modalTitle: document.getElementById('modal-title'),
+        amountInput: document.getElementById('amount-input'),
+        selectField: document.getElementById('select-field'),
+        extraField: document.getElementById('extra-field'),
+        cancelBtn: document.getElementById('cancel-btn'),
+        confirmBtn: document.getElementById('confirm-btn'),
+        toast: document.getElementById('toast'),
+    };
+
+    let currentAction = null;
+
+    function formatMoney(value) {
+        return `₩${value.toLocaleString('ko-KR')}`;
+    }
+
+    function render() {
+        el.totalAssets.textContent = formatMoney(state.totalAssets);
+        el.cardBalance.textContent = formatMoney(state.cardBalance);
+        el.pointBalance.textContent = `${state.points.toLocaleString('ko-KR')}P`;
+        el.visaDays.textContent = state.visaDday <= 90
+            ? `D-${state.visaDday} | 비자 만료까지 관리 필요`
+            : '체류 만료 90일 전 환불 안내 메시지가 발송됩니다.';
+        el.refundAlert.style.color = state.visaDday <= 90 ? '#FF0000' : '#79818B';
+
+        el.timeline.innerHTML = state.timeline.map(item => `
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fas ${item.icon}"></i></div>
+                <div class="timeline-text">
+                    <strong>${item.title}</strong>
+                    <span>${item.desc}</span>
+                </div>
+                <div class="timeline-amount">${item.amount}</div>
+            </div>
+        `).join('');
+
+        if (!state.missionAvailable) {
+            el.missionBanner.innerHTML = '<i class="fas fa-check-circle"></i> 5,000P를 적립했습니다';
+            el.missionBanner.style.backgroundColor = '#F0FFF4';
+            el.missionBanner.style.color = '#0F9D58';
+        }
+    }
+
+    function openModal(action) {
+        currentAction = action;
+        el.amountInput.value = '';
+        el.selectField.value = 'USD';
+        el.extraField.style.display = action === 'remit' ? 'block' : 'none';
+        el.modalTitle.textContent = {
+            charge: '충전',
+            transfer: '이체',
+            remit: '해외 송금',
+        }[action];
+        el.modalBackdrop.style.display = 'flex';
+    }
+
+    function closeModal() {
+        el.modalBackdrop.style.display = 'none';
+        currentAction = null;
+    }
+
+    function showToast(message) {
+        el.toast.textContent = message;
+        el.toast.style.display = 'block';
+        setTimeout(() => { el.toast.style.display = 'none'; }, 1800);
+    }
+
+    function pushTimeline(icon, title, desc, amount) {
+        state.timeline = [{ icon, title, desc, amount }, ...state.timeline].slice(0, 6);
+    }
+
+    function handleConfirm() {
+        const value = Number(el.amountInput.value);
+        if (!value || value <= 0) {
+            showToast('금액을 입력해주세요');
+            return;
+        }
+
+        if (currentAction === 'charge') {
+            state.cardBalance += value;
+            state.totalAssets += value;
+            pushTimeline('fa-wallet', '충전 완료', '카드에 충전되었습니다', `+${formatMoney(value)}`);
+            showToast('충전 완료');
+        }
+
+        if (currentAction === 'transfer') {
+            if (value > state.cardBalance) {
+                showToast('잔액이 부족합니다');
+                return;
+            }
+            state.cardBalance -= value;
+            pushTimeline('fa-exchange-alt', '이체 성공', '연결계좌로 이체 처리됨', `-${formatMoney(value)}`);
+            showToast('이체 완료');
+        }
+
+        if (currentAction === 'remit') {
+            const fee = { USD: 5000, EUR: 4000, JPY: 3000 }[el.selectField.value] || 5000;
+            const total = value + fee;
+            if (total > state.cardBalance) {
+                showToast('잔액이 부족합니다 (수수료 포함)');
+                return;
+            }
+            state.cardBalance -= total;
+            const desc = `${el.selectField.value} 송금 (수수료 ${formatMoney(fee)})`;
+            pushTimeline('fa-plane-departure', '해외 송금', desc, `-${formatMoney(total)}`);
+            showToast('해외 송금 완료');
+        }
+
+        closeModal();
+        render();
+    }
+
+    function claimMission() {
+        if (!state.missionAvailable) return;
+        state.points += 5000;
+        state.missionAvailable = false;
+        pushTimeline('fa-gift', '미션 보상', '환전 미션 달성 보너스', '+5,000P');
+        render();
+        showToast('5,000P가 적립되었습니다');
+    }
+
+    function resetData() {
+        state.totalAssets = 1540000;
+        state.cardBalance = 840000;
+        state.points = 12000;
+        state.missionAvailable = true;
+        state.visaDday = 88;
+        state.timeline = [
+            { icon: 'fa-wallet', title: '선불계좌 충전', desc: '간편 충전 성공', amount: '+₩200,000' },
+            { icon: 'fa-plane', title: '항공권 결제', desc: 'Korea → USA', amount: '-₩650,000' },
+            { icon: 'fa-coins', title: '환전 목표 등록', desc: '달러 목표환율 1,320원', amount: '알림 ON' },
+        ];
+        render();
+        showToast('초기 데이터로 복구했습니다');
+    }
+
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', () => openModal(btn.dataset.action));
+    });
+
+    el.cancelBtn.addEventListener('click', closeModal);
+    el.modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === el.modalBackdrop) closeModal();
+    });
+    el.confirmBtn.addEventListener('click', handleConfirm);
+    el.missionBanner.addEventListener('click', claimMission);
+    el.resetBtn.addEventListener('click', resetData);
+
+    render();
+</script>
 
 </body>
 </html>
