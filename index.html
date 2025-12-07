@@ -6,8 +6,8 @@
     <title>Boarding - 모든 금융을 한 손에 담다 (Interactive)</title>
     <style>
         :root {
-            --primary-color: #2D6CFF; /* 토스 유사 블루 */
-            --background-color: #F8F9FA;
+            --primary-color: #2D6CFF;
+            --background-color: #F5F7FB;
             --card-background: #FFFFFF;
             --text-color: #1F2327;
             --sub-text-color: #79818B;
@@ -16,48 +16,59 @@
             --warning: #FF9800;
         }
 
+        * { box-sizing: border-box; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
+            background: radial-gradient(120% 120% at 20% 20%, #f1f5ff, #f8f9fb 40%, #e9f0ff 80%);
+            color: var(--text-color);
+            min-height: 100vh;
         }
 
-        .phone-mockup {
-            width: 375px; /* 표준 모바일 화면 너비 */
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            background-color: var(--card-background);
+        .app-shell {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 48px;
         }
 
-        .header {
+        .topbar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: var(--card-background);
-            border-bottom: 1px solid #EEE;
+            justify-content: space-between;
+            margin-bottom: 18px;
         }
 
-        .header h1 {
-            font-size: 24px;
+        .topbar h1 {
+            margin: 0;
+            font-size: 26px;
             font-weight: 800;
             color: var(--primary-color);
-            margin: 0;
         }
 
-        .header .icons {
-            font-size: 20px;
-            color: var(--text-color);
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            background: #eef3ff;
+            color: var(--primary-color);
         }
 
-        .main-balance {
-            padding: 20px;
-            text-align: left;
-            background-color: var(--card-background);
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr;
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 8px 28px rgba(26, 35, 126, 0.08);
         }
 
         .main-balance .title {
@@ -67,17 +78,26 @@
         }
 
         .main-balance .amount {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 900;
             color: var(--text-color);
         }
 
-        .account-card {
-            background-color: var(--card-background);
-            border-radius: 15px;
-            margin: 0 20px 20px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .info-row small { color: var(--sub-text-color); }
+        .info-row #reset-btn {
+            cursor: pointer;
+            background: transparent;
+            color: var(--sub-text-color);
+            padding: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: underline;
         }
 
         .account-card-header {
@@ -101,12 +121,13 @@
             font-size: 12px;
             font-weight: 600;
             text-decoration: none;
-            cursor: pointer; /* 버튼 커서 추가 */
+            cursor: pointer;
         }
 
         .account-actions {
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             padding-top: 10px;
             border-top: 1px dashed var(--button-bg);
         }
@@ -117,13 +138,14 @@
             font-weight: 600;
             color: var(--primary-color);
             cursor: pointer;
-            padding: 8px 6px;
+            padding: 10px 6px;
             border-radius: 12px;
             transition: background-color 0.2s ease, transform 0.1s ease;
+            background: #f7f9ff;
         }
 
         .action-btn:hover {
-            background-color: #f3f6ff;
+            background-color: #eef3ff;
         }
 
         .action-btn:active {
@@ -136,14 +158,12 @@
             margin-bottom: 5px;
         }
 
-        .feature-list {
-            padding: 0 20px;
-        }
+        .feature-list { padding: 0; margin: 0; }
 
         .feature-item {
             display: flex;
             align-items: center;
-            padding: 15px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #EEE;
         }
 
@@ -178,7 +198,6 @@
         .gamification-banner {
             background-color: #FFF3E6;
             padding: 15px;
-            margin: 20px;
             border-radius: 15px;
             text-align: center;
             font-weight: 700;
@@ -186,6 +205,7 @@
             cursor: pointer;
             box-shadow: inset 0 0 0 1px rgba(255, 152, 0, 0.15);
             transition: transform 0.15s ease, box-shadow 0.2s ease;
+            margin-bottom: 12px;
         }
 
         .gamification-banner:hover {
@@ -197,11 +217,10 @@
             font-size: 15px;
             font-weight: 800;
             color: var(--text-color);
-            margin: 20px 20px 8px;
+            margin: 12px 0 8px;
         }
 
         .timeline {
-            margin: 0 20px 20px;
             background: var(--card-background);
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -252,20 +271,7 @@
             font-size: 14px;
         }
 
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            background: #f3f6ff;
-            color: var(--primary-color);
-            margin-left: 8px;
-        }
-
         .notice {
-            margin: 0 20px 12px;
             padding: 12px 14px;
             background: #f2f7ff;
             color: var(--text-color);
@@ -278,74 +284,66 @@
             box-shadow: inset 0 0 0 1px rgba(45,108,255,0.06);
         }
 
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4); /* 불투명도 증가 */
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 10;
+        .grid-duo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .modal {
-            background: #fff;
-            width: 330px; /* 너비 조정 */
-            max-width: 100%;
-            border-radius: 18px;
-            padding: 20px; /* 패딩 조정 */
-            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .form-card {
+            max-width: 520px;
         }
 
-        .modal h3 {
-            margin: 0 0 16px; /* 마진 조정 */
-            font-size: 20px; /* 글씨 크기 조정 */
-            font-weight: 800;
-            color: var(--text-color);
+        .input-group {
+            margin-bottom: 14px;
         }
-
-        .modal label {
+        .input-group label {
             display: block;
             font-size: 13px;
-            margin-bottom: 6px;
             color: var(--sub-text-color);
+            margin-bottom: 6px;
         }
-
-        .modal input, .modal select {
+        .input-group input,
+        .input-group select {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
-            font-size: 16px;
-            box-sizing: border-box;
-            -webkit-appearance: none; /* iOS에서 기본 스타일 제거 */
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px; /* 마진 조정 */
+            font-size: 15px;
+            background: #fff;
         }
 
         .btn {
-            flex: 1;
-            padding: 14px; /* 패딩 증가 */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 16px;
             border-radius: 12px;
             border: none;
             font-weight: 700;
-            font-size: 15px; /* 글씨 크기 조정 */
+            font-size: 14px;
             cursor: pointer;
             transition: background-color 0.2s ease, opacity 0.2s ease;
         }
-
         .btn.primary { background: var(--primary-color); color: #fff; }
-        .btn.primary:hover { opacity: 0.9; }
+        .btn.primary:hover { opacity: 0.92; }
         .btn.ghost { background: #f6f7fb; color: var(--text-color); }
         .btn.ghost:hover { background: #eaeaec; }
 
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-bottom: 12px;
+            text-decoration: none;
+        }
 
         .toast {
             position: fixed;
@@ -364,137 +362,165 @@
             opacity: 0;
         }
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-        }
-        .info-row small { color: var(--sub-text-color); }
-        .info-row #reset-btn {
-            cursor: pointer;
-            background: transparent;
-            color: var(--sub-text-color);
-            padding: 0;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: underline;
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-<div class="phone-mockup">
-    <div class="header">
+<div class="app-shell">
+    <div class="topbar">
         <h1>Boarding</h1>
-        <div class="icons">
-            <i class="fas fa-bell"></i>
-        </div>
+        <div class="pill"><i class="fas fa-bell"></i> 알림 ON</div>
     </div>
 
-    <div class="main-balance">
-        <div class="title">총 자산</div>
-        <div class="amount" id="total-assets">₩0</div>
-        <div class="info-row">
-            <small>포인트: <span id="point-balance">0P</span></small>
-            <button class="detail-btn" id="reset-btn">데이터 초기화</button>
-        </div>
-    </div>
+    <!-- 홈 -->
+    <section class="page active" id="page-home">
+        <div class="content-grid">
+            <div class="card">
+                <div class="main-balance">
+                    <div class="title">총 자산</div>
+                    <div class="amount" id="total-assets">₩0</div>
+                    <div class="info-row">
+                        <small>포인트: <span id="point-balance">0P</span></small>
+                        <button class="detail-btn" id="reset-btn">데이터 초기화</button>
+                    </div>
+                </div>
 
-    <div class="account-card">
-        <div class="account-card-header">
-            <div class="name">My Boarding Card (선불계좌)</div>
-            <div class="detail-btn" style="cursor: default;">관리 <i class="fas fa-chevron-right"></i></div>
-        </div>
-        <div class="account-balance">
-            <div class="amount" id="card-balance" style="font-size: 24px; font-weight: 800;">₩0</div>
-            <div class="title" id="refund-alert" style="font-size: 12px; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
-        </div>
-        <div class="account-actions">
-            <div class="action-btn" data-action="charge">
-                <i class="fas fa-wallet"></i> 충전
-            </div>
-            <div class="action-btn" data-action="transfer">
-                <i class="fas fa-exchange-alt"></i> 이체
-            </div>
-            <div class="action-btn" data-action="remit">
-                <i class="fas fa-plane-departure"></i> 해외 송금
-            </div>
-        </div>
-    </div>
+                <div class="card" style="padding:16px; margin-top:10px;">
+                    <div class="account-card-header">
+                        <div class="name">My Boarding Card (선불계좌)</div>
+                        <div class="detail-btn" style="cursor: default;">관리 <i class="fas fa-chevron-right"></i></div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="amount" id="card-balance" style="font-size: 24px; font-weight: 800;">₩0</div>
+                        <div class="title" id="refund-alert" style="font-size: 12px; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
+                    </div>
+                    <div class="account-actions">
+                        <div class="action-btn" data-target="page-charge">
+                            <i class="fas fa-wallet"></i> 충전
+                        </div>
+                        <div class="action-btn" data-target="page-transfer">
+                            <i class="fas fa-exchange-alt"></i> 이체
+                        </div>
+                        <div class="action-btn" data-target="page-remit">
+                            <i class="fas fa-plane-departure"></i> 해외 송금
+                        </div>
+                    </div>
+                </div>
 
-    <div class="notice" id="visa-notice">
-        <i class="fas fa-flag"></i>
-        <div>
-            <strong>D-90 비자 만료일 알림</strong><br>
-            <span id="visa-days"></span>
-        </div>
-    </div>
+                <div class="notice" id="visa-notice" style="margin-top:12px;">
+                    <i class="fas fa-flag"></i>
+                    <div>
+                        <strong>D-90 비자 만료일 알림</strong><br>
+                        <span id="visa-days"></span>
+                    </div>
+                </div>
 
-    <div class="gamification-banner" id="mission-banner">
-        <i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>
-    </div>
+                <div class="gamification-banner" id="mission-banner">
+                    <i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>
+                </div>
 
-    <div class="feature-list">
-        <div class="feature-item">
-            <div class="icon"><i class="fas fa-bus"></i></div>
-            <div class="text">
-                <strong>교통카드 (T-money)</strong>
-                <span>잔액 ₩12,500 | 간편 충전 가능</span>
+                <div class="section-title">서비스</div>
+                <div class="grid-duo">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="icon"><i class="fas fa-bus"></i></div>
+                            <div class="text">
+                                <strong>교통카드 (T-money)</strong>
+                                <span>잔액 ₩12,500 | 간편 충전 가능</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="text">
+                                <strong>소비 내역 자동 기록</strong>
+                                <span>8월 지출 ₩450,000 | 예산 관리</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="icon"><i class="fas fa-flag"></i></div>
+                            <div class="text">
+                                <strong>체류 행정 지원</strong>
+                                <span>D-90 비자 만료일 알림 | 서류 가이드</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon"><i class="fas fa-coins"></i></div>
+                            <div class="text">
+                                <strong>환율 리스크 관리</strong>
+                                <span>원/달러 목표 환율 알림 설정</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title">실시간 활동 로그</div>
+                <div class="timeline" id="timeline"></div>
             </div>
         </div>
-        <div class="feature-item">
-            <div class="icon"><i class="fas fa-chart-line"></i></div>
-            <div class="text">
-                <strong>소비 내역 자동 기록</strong>
-                <span>8월 지출 ₩450,000 | 예산 관리</span>
-            </div>
-        </div>
-        <div class="feature-item">
-            <div class="icon"><i class="fas fa-flag"></i></div>
-            <div class="text">
-                <strong>체류 행정 지원</strong>
-                <span>D-90 비자 만료일 알림 | 서류 가이드</span>
-            </div>
-        </div>
-        <div class="feature-item">
-            <div class="icon"><i class="fas fa-coins"></i></div>
-            <div class="text">
-                <strong>환율 리스크 관리</strong>
-                <span>원/달러 목표 환율 알림 설정</span>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    <div class="section-title">실시간 활동 로그</div>
-    <div class="timeline" id="timeline"></div>
-</div>
+    <!-- 충전 페이지 -->
+    <section class="page" id="page-charge">
+        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <div class="card form-card">
+            <h2 style="margin-top:0;">선불계좌 충전</h2>
+            <p style="color:var(--sub-text-color); margin-top:4px;">카드 잔액이 총 자산에 반영됩니다.</p>
+            <div class="input-group">
+                <label for="charge-amount">충전 금액 (₩)</label>
+                <input type="number" id="charge-amount" min="0" inputmode="numeric" placeholder="예: 50000">
+            </div>
+            <button class="btn primary" id="charge-submit"><i class="fas fa-wallet"></i> 충전하기</button>
+        </div>
+    </section>
 
-<div class="modal-backdrop" id="modal-backdrop">
-    <div class="modal">
-        <h3 id="modal-title">금액 입력</h3>
-        <label for="amount-input">금액 (₩)</label>
-        <input type="number" id="amount-input" min="0" inputmode="numeric" placeholder="예: 50000">
-        <div id="extra-field" style="display:none; margin-top:16px;">
-            <label for="select-field">해외 송금 통화</label>
-            <select id="select-field">
-                <option value="USD">USD (수수료 5,000원)</option>
-                <option value="EUR">EUR (수수료 4,000원)</option>
-                <option value="JPY">JPY (수수료 3,000원)</option>
-            </select>
+    <!-- 이체 페이지 -->
+    <section class="page" id="page-transfer">
+        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <div class="card form-card">
+            <h2 style="margin-top:0;">이체 (연결계좌)</h2>
+            <p style="color:var(--sub-text-color); margin-top:4px;">연결된 국내 계좌로 이동합니다. 총 자산은 유지됩니다.</p>
+            <div class="input-group">
+                <label for="transfer-amount">이체 금액 (₩)</label>
+                <input type="number" id="transfer-amount" min="0" inputmode="numeric" placeholder="예: 30000">
+            </div>
+            <button class="btn primary" id="transfer-submit"><i class="fas fa-exchange-alt"></i> 이체하기</button>
         </div>
-        <div class="modal-actions">
-            <button class="btn ghost" id="cancel-btn">취소</button>
-            <button class="btn primary" id="confirm-btn">확인</button>
+    </section>
+
+    <!-- 해외 송금 페이지 -->
+    <section class="page" id="page-remit">
+        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <div class="card form-card">
+            <h2 style="margin-top:0;">해외 송금</h2>
+            <p style="color:var(--sub-text-color); margin-top:4px;">수수료를 포함한 금액만큼 잔액/총자산이 감소합니다.</p>
+            <div class="input-group">
+                <label for="remit-amount">송금 금액 (₩)</label>
+                <input type="number" id="remit-amount" min="0" inputmode="numeric" placeholder="예: 100000">
+            </div>
+            <div class="input-group">
+                <label for="remit-currency">통화 선택</label>
+                <select id="remit-currency">
+                    <option value="USD">USD (수수료 5,000원)</option>
+                    <option value="EUR">EUR (수수료 4,000원)</option>
+                    <option value="JPY">JPY (수수료 3,000원)</option>
+                </select>
+            </div>
+            <button class="btn primary" id="remit-submit"><i class="fas fa-plane-departure"></i> 송금하기</button>
         </div>
-    </div>
+    </section>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-    // 애플리케이션 상태 관리 객체
     const state = {
         totalAssets: 1540000,
         cardBalance: 840000,
@@ -508,7 +534,6 @@
         ],
     };
 
-    // DOM 요소 객체
     const el = {
         totalAssets: document.getElementById('total-assets'),
         cardBalance: document.getElementById('card-balance'),
@@ -518,47 +543,43 @@
         missionBanner: document.getElementById('mission-banner'),
         refundAlert: document.getElementById('refund-alert'),
         resetBtn: document.getElementById('reset-btn'),
-        modalBackdrop: document.getElementById('modal-backdrop'),
-        modalTitle: document.getElementById('modal-title'),
-        amountInput: document.getElementById('amount-input'),
-        selectField: document.getElementById('select-field'),
-        extraField: document.getElementById('extra-field'),
-        cancelBtn: document.getElementById('cancel-btn'),
-        confirmBtn: document.getElementById('confirm-btn'),
         toast: document.getElementById('toast'),
+        chargeInput: document.getElementById('charge-amount'),
+        transferInput: document.getElementById('transfer-amount'),
+        remitInput: document.getElementById('remit-amount'),
+        remitCurrency: document.getElementById('remit-currency'),
     };
 
-    let currentAction = null;
+    const pages = {
+        'page-home': document.getElementById('page-home'),
+        'page-charge': document.getElementById('page-charge'),
+        'page-transfer': document.getElementById('page-transfer'),
+        'page-remit': document.getElementById('page-remit'),
+    };
 
-    // 숫자 포맷 함수: 1,000,000원 형식으로 변환
     function formatMoney(value) {
         return `₩${value.toLocaleString('ko-KR')}`;
     }
 
-    // 타임라인에 새 항목 추가
     function pushTimeline(icon, title, desc, amount) {
-        state.timeline = [{ icon, title, desc, amount }, ...state.timeline].slice(0, 6); // 최대 6개 유지
+        state.timeline = [{ icon, title, desc, amount }, ...state.timeline].slice(0, 6);
     }
 
-    // 화면 렌더링 함수
     function render() {
         el.totalAssets.textContent = formatMoney(state.totalAssets);
         el.cardBalance.textContent = formatMoney(state.cardBalance);
         el.pointBalance.textContent = `${state.points.toLocaleString('ko-KR')}P`;
 
-        // 비자 만료일 알림 업데이트
         el.visaDays.textContent = state.visaDday <= 90
             ? `D-${state.visaDday} | 비자 만료까지 관리 필요`
             : '체류 만료 90일 전 환불 안내 메시지가 발송됩니다.';
-        
+
         el.refundAlert.textContent = state.visaDday <= 90
             ? `D-${state.visaDday} 출국 예정일 90일 전 자동 환불 알림`
             : '출국 예정일 90일 전 자동 환불 알림';
 
         el.refundAlert.style.color = state.visaDday <= 90 ? '#FF0000' : 'var(--sub-text-color)';
 
-
-        // 타임라인 목록 렌더링
         el.timeline.innerHTML = state.timeline.map(item => `
             <div class="timeline-item">
                 <div class="timeline-icon"><i class="fas ${item.icon}"></i></div>
@@ -570,102 +591,90 @@
             </div>
         `).join('');
 
-        // 미션 배너 상태 업데이트
         if (!state.missionAvailable) {
             el.missionBanner.innerHTML = '<i class="fas fa-check-circle"></i> 5,000P를 적립했습니다';
             el.missionBanner.style.backgroundColor = '#F0FFF4';
             el.missionBanner.style.color = '#0F9D58';
             el.missionBanner.style.cursor = 'default';
         } else {
-             el.missionBanner.innerHTML = '<i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>';
+            el.missionBanner.innerHTML = '<i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>';
             el.missionBanner.style.backgroundColor = '#FFF3E6';
             el.missionBanner.style.color = 'var(--warning)';
             el.missionBanner.style.cursor = 'pointer';
         }
     }
 
-    // 모달 열기
-    function openModal(action) {
-        currentAction = action;
-        el.amountInput.value = '';
-        el.selectField.value = 'USD';
-        
-        // 해외 송금일 경우 통화 선택 필드 노출
-        el.extraField.style.display = action === 'remit' ? 'block' : 'none';
-        
-        el.modalTitle.textContent = {
-            charge: '선불계좌 충전',
-            transfer: '이체 (연결계좌)',
-            remit: '해외 송금',
-        }[action];
-        
-        el.modalBackdrop.style.display = 'flex';
-        // 모달이 열리면 입력 필드에 포커스
-        setTimeout(() => el.amountInput.focus(), 100);
-    }
-
-    // 모달 닫기
-    function closeModal() {
-        el.modalBackdrop.style.display = 'none';
-        currentAction = null;
-    }
-
-    // 토스트 팝업 표시
     function showToast(message) {
         el.toast.textContent = message;
         el.toast.style.opacity = 1;
         el.toast.style.display = 'block';
-        setTimeout(() => { 
+        setTimeout(() => {
             el.toast.style.opacity = 0;
-            setTimeout(() => { el.toast.style.display = 'none'; }, 300); // fade-out 후 숨김
+            setTimeout(() => { el.toast.style.display = 'none'; }, 300);
         }, 1800);
     }
 
-    // 모달 확인 버튼 처리 로직
-    function handleConfirm() {
-        const value = Number(el.amountInput.value);
+    function navigate(targetId) {
+        Object.values(pages).forEach(p => p.classList.remove('active'));
+        pages[targetId].classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitCharge() {
+        const value = Number(el.chargeInput.value);
         if (!value || value <= 0) {
             showToast('금액을 올바르게 입력해주세요');
             return;
         }
-
-        if (currentAction === 'charge') {
-            state.cardBalance += value;
-            state.totalAssets += value;
-            pushTimeline('fa-wallet', '선불계좌 충전', '간편 충전 성공', `+${formatMoney(value)}`);
-            showToast('충전 완료');
-        }
-
-        if (currentAction === 'transfer') {
-            if (value > state.cardBalance) {
-                showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다`);
-                return;
-            }
-            state.cardBalance -= value;
-            // 이체는 총 자산 내에서의 이동이므로 totalAssets는 변동 없음
-            pushTimeline('fa-exchange-alt', '이체 성공', '연결계좌로 이체 처리됨', `-${formatMoney(value)}`);
-            showToast('이체 완료');
-        }
-
-        if (currentAction === 'remit') {
-            const fee = { USD: 5000, EUR: 4000, JPY: 3000 }[el.selectField.value] || 5000;
-            const total = value + fee;
-            if (total > state.cardBalance) {
-                showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다 (수수료 ${formatMoney(fee)} 포함)`);
-                return;
-            }
-            state.cardBalance -= total;
-            state.totalAssets -= total; // 해외 송금은 자산 감소
-            const desc = `${el.selectField.value} 송금 (수수료 ${formatMoney(fee)})`;
-            pushTimeline('fa-plane-departure', '해외 송금', desc, `-${formatMoney(total)}`);
-            showToast('해외 송금 신청 완료');
-        }
-
-        closeModal();
-        render(); // 상태가 변경되었으므로 화면 재렌더링
+        state.cardBalance += value;
+        state.totalAssets += value;
+        pushTimeline('fa-wallet', '선불계좌 충전', '간편 충전 성공', `+${formatMoney(value)}`);
+        render();
+        showToast('충전 완료');
+        el.chargeInput.value = '';
+        navigate('page-home');
     }
 
-    // 미션 보상 받기
+    function submitTransfer() {
+        const value = Number(el.transferInput.value);
+        if (!value || value <= 0) {
+            showToast('금액을 올바르게 입력해주세요');
+            return;
+        }
+        if (value > state.cardBalance) {
+            showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다`);
+            return;
+        }
+        state.cardBalance -= value;
+        pushTimeline('fa-exchange-alt', '이체 성공', '연결계좌로 이체 처리됨', `-${formatMoney(value)}`);
+        render();
+        showToast('이체 완료');
+        el.transferInput.value = '';
+        navigate('page-home');
+    }
+
+    function submitRemit() {
+        const value = Number(el.remitInput.value);
+        if (!value || value <= 0) {
+            showToast('금액을 올바르게 입력해주세요');
+            return;
+        }
+        const fee = { USD: 5000, EUR: 4000, JPY: 3000 }[el.remitCurrency.value] || 5000;
+        const total = value + fee;
+        if (total > state.cardBalance) {
+            showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다 (수수료 ${formatMoney(fee)} 포함)`);
+            return;
+        }
+        state.cardBalance -= total;
+        state.totalAssets -= total;
+        const desc = `${el.remitCurrency.value} 송금 (수수료 ${formatMoney(fee)})`;
+        pushTimeline('fa-plane-departure', '해외 송금', desc, `-${formatMoney(total)}`);
+        render();
+        showToast('해외 송금 신청 완료');
+        el.remitInput.value = '';
+        navigate('page-home');
+    }
+
     function claimMission() {
         if (!state.missionAvailable) {
             showToast('이미 보상을 받으셨습니다');
@@ -678,9 +687,7 @@
         showToast('5,000P가 적립되었습니다 🎉');
     }
 
-    // 데이터 초기화
     function resetData() {
-        // 초기 상태로 복구
         state.totalAssets = 1540000;
         state.cardBalance = 840000;
         state.points = 12000;
@@ -693,23 +700,24 @@
         ];
         render();
         showToast('초기 데이터로 복구했습니다');
+        navigate('page-home');
     }
 
-    // 이벤트 리스너 등록
-    document.querySelectorAll('.action-btn').forEach(btn => {
-        btn.addEventListener('click', () => openModal(btn.dataset.action));
+    // 네비게이션
+    document.querySelectorAll('[data-target]').forEach(btn => {
+        btn.addEventListener('click', () => navigate(btn.dataset.target));
     });
 
-    el.cancelBtn.addEventListener('click', closeModal);
-    // 모달 영역 바깥 클릭 시 닫기
-    el.modalBackdrop.addEventListener('click', (e) => {
-        if (e.target === el.modalBackdrop) closeModal();
-    });
-    el.confirmBtn.addEventListener('click', handleConfirm);
+    document.getElementById('charge-submit').addEventListener('click', submitCharge);
+    document.getElementById('transfer-submit').addEventListener('click', submitTransfer);
+    document.getElementById('remit-submit').addEventListener('click', submitRemit);
+    document.getElementById('charge-amount').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitCharge(); });
+    document.getElementById('transfer-amount').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitTransfer(); });
+    document.getElementById('remit-amount').addEventListener('keydown', (e) => { if (e.key === 'Enter') submitRemit(); });
+
     el.missionBanner.addEventListener('click', claimMission);
     el.resetBtn.addEventListener('click', resetData);
 
-    // 초기 화면 렌더링
     render();
 </script>
 
