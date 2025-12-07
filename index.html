@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boarding - 모든 금융을 한 손에 담다</title>
+    <title>Boarding - 모든 금융을 한 손에 담다 (Interactive)</title>
     <style>
         :root {
             --primary-color: #2D6CFF; /* 토스 유사 블루 */
@@ -101,6 +101,7 @@
             font-size: 12px;
             font-weight: 600;
             text-decoration: none;
+            cursor: pointer; /* 버튼 커서 추가 */
         }
 
         .account-actions {
@@ -280,7 +281,7 @@
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.4); /* 불투명도 증가 */
             display: none;
             align-items: center;
             justify-content: center;
@@ -290,16 +291,18 @@
 
         .modal {
             background: #fff;
-            width: 360px;
+            width: 330px; /* 너비 조정 */
             max-width: 100%;
             border-radius: 18px;
-            padding: 18px 18px 16px;
+            padding: 20px; /* 패딩 조정 */
             box-shadow: 0 16px 40px rgba(0,0,0,0.2);
         }
 
         .modal h3 {
-            margin: 0 0 12px;
-            font-size: 18px;
+            margin: 0 0 16px; /* 마진 조정 */
+            font-size: 20px; /* 글씨 크기 조정 */
+            font-weight: 800;
+            color: var(--text-color);
         }
 
         .modal label {
@@ -314,28 +317,35 @@
             padding: 12px;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
-            font-size: 15px;
+            font-size: 16px;
             box-sizing: border-box;
+            -webkit-appearance: none; /* iOS에서 기본 스타일 제거 */
+            -moz-appearance: none;
+            appearance: none;
         }
 
         .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 20px; /* 마진 조정 */
         }
 
         .btn {
             flex: 1;
-            padding: 12px;
+            padding: 14px; /* 패딩 증가 */
             border-radius: 12px;
             border: none;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px; /* 글씨 크기 조정 */
             cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
         }
 
         .btn.primary { background: var(--primary-color); color: #fff; }
+        .btn.primary:hover { opacity: 0.9; }
         .btn.ghost { background: #f6f7fb; color: var(--text-color); }
+        .btn.ghost:hover { background: #eaeaec; }
+
 
         .toast {
             position: fixed;
@@ -350,6 +360,8 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             display: none;
             z-index: 12;
+            transition: opacity 0.3s ease;
+            opacity: 0;
         }
 
         .info-row {
@@ -359,6 +371,15 @@
             margin-top: 8px;
         }
         .info-row small { color: var(--sub-text-color); }
+        .info-row #reset-btn {
+            cursor: pointer;
+            background: transparent;
+            color: var(--sub-text-color);
+            padding: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: underline;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -377,18 +398,18 @@
         <div class="amount" id="total-assets">₩0</div>
         <div class="info-row">
             <small>포인트: <span id="point-balance">0P</span></small>
-            <button class="detail-btn" id="reset-btn" style="border:none;">데이터 초기화</button>
+            <button class="detail-btn" id="reset-btn">데이터 초기화</button>
         </div>
     </div>
 
     <div class="account-card">
         <div class="account-card-header">
             <div class="name">My Boarding Card (선불계좌)</div>
-            <a href="#" class="detail-btn">관리 <i class="fas fa-chevron-right"></i></a>
+            <div class="detail-btn" style="cursor: default;">관리 <i class="fas fa-chevron-right"></i></div>
         </div>
         <div class="account-balance">
             <div class="amount" id="card-balance" style="font-size: 24px; font-weight: 800;">₩0</div>
-            <div class="title" id="refund-alert" style="font-size: 12px; color: #FF0000; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
+            <div class="title" id="refund-alert" style="font-size: 12px; margin-top: 5px;">출국 예정일 90일 전 자동 환불 알림</div>
         </div>
         <div class="account-actions">
             <div class="action-btn" data-action="charge">
@@ -407,7 +428,7 @@
         <i class="fas fa-flag"></i>
         <div>
             <strong>D-90 비자 만료일 알림</strong><br>
-            <span id="visa-days">체류 만료 90일 전 환불 안내 메시지가 발송됩니다.</span>
+            <span id="visa-days"></span>
         </div>
     </div>
 
@@ -455,7 +476,7 @@
         <h3 id="modal-title">금액 입력</h3>
         <label for="amount-input">금액 (₩)</label>
         <input type="number" id="amount-input" min="0" inputmode="numeric" placeholder="예: 50000">
-        <div id="extra-field" style="display:none; margin-top:12px;">
+        <div id="extra-field" style="display:none; margin-top:16px;">
             <label for="select-field">해외 송금 통화</label>
             <select id="select-field">
                 <option value="USD">USD (수수료 5,000원)</option>
@@ -473,6 +494,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
+    // 애플리케이션 상태 관리 객체
     const state = {
         totalAssets: 1540000,
         cardBalance: 840000,
@@ -486,6 +508,7 @@
         ],
     };
 
+    // DOM 요소 객체
     const el = {
         totalAssets: document.getElementById('total-assets'),
         cardBalance: document.getElementById('card-balance'),
@@ -507,19 +530,35 @@
 
     let currentAction = null;
 
+    // 숫자 포맷 함수: 1,000,000원 형식으로 변환
     function formatMoney(value) {
         return `₩${value.toLocaleString('ko-KR')}`;
     }
 
+    // 타임라인에 새 항목 추가
+    function pushTimeline(icon, title, desc, amount) {
+        state.timeline = [{ icon, title, desc, amount }, ...state.timeline].slice(0, 6); // 최대 6개 유지
+    }
+
+    // 화면 렌더링 함수
     function render() {
         el.totalAssets.textContent = formatMoney(state.totalAssets);
         el.cardBalance.textContent = formatMoney(state.cardBalance);
         el.pointBalance.textContent = `${state.points.toLocaleString('ko-KR')}P`;
+
+        // 비자 만료일 알림 업데이트
         el.visaDays.textContent = state.visaDday <= 90
             ? `D-${state.visaDday} | 비자 만료까지 관리 필요`
             : '체류 만료 90일 전 환불 안내 메시지가 발송됩니다.';
-        el.refundAlert.style.color = state.visaDday <= 90 ? '#FF0000' : '#79818B';
+        
+        el.refundAlert.textContent = state.visaDday <= 90
+            ? `D-${state.visaDday} 출국 예정일 90일 전 자동 환불 알림`
+            : '출국 예정일 90일 전 자동 환불 알림';
 
+        el.refundAlert.style.color = state.visaDday <= 90 ? '#FF0000' : 'var(--sub-text-color)';
+
+
+        // 타임라인 목록 렌더링
         el.timeline.innerHTML = state.timeline.map(item => `
             <div class="timeline-item">
                 <div class="timeline-icon"><i class="fas ${item.icon}"></i></div>
@@ -531,61 +570,79 @@
             </div>
         `).join('');
 
+        // 미션 배너 상태 업데이트
         if (!state.missionAvailable) {
             el.missionBanner.innerHTML = '<i class="fas fa-check-circle"></i> 5,000P를 적립했습니다';
             el.missionBanner.style.backgroundColor = '#F0FFF4';
             el.missionBanner.style.color = '#0F9D58';
+            el.missionBanner.style.cursor = 'default';
+        } else {
+             el.missionBanner.innerHTML = '<i class="fas fa-trophy"></i> 환전 미션 달성! 5,000원 포인트 받기 <i class="fas fa-chevron-right"></i>';
+            el.missionBanner.style.backgroundColor = '#FFF3E6';
+            el.missionBanner.style.color = 'var(--warning)';
+            el.missionBanner.style.cursor = 'pointer';
         }
     }
 
+    // 모달 열기
     function openModal(action) {
         currentAction = action;
         el.amountInput.value = '';
         el.selectField.value = 'USD';
+        
+        // 해외 송금일 경우 통화 선택 필드 노출
         el.extraField.style.display = action === 'remit' ? 'block' : 'none';
+        
         el.modalTitle.textContent = {
-            charge: '충전',
-            transfer: '이체',
+            charge: '선불계좌 충전',
+            transfer: '이체 (연결계좌)',
             remit: '해외 송금',
         }[action];
+        
         el.modalBackdrop.style.display = 'flex';
+        // 모달이 열리면 입력 필드에 포커스
+        setTimeout(() => el.amountInput.focus(), 100);
     }
 
+    // 모달 닫기
     function closeModal() {
         el.modalBackdrop.style.display = 'none';
         currentAction = null;
     }
 
+    // 토스트 팝업 표시
     function showToast(message) {
         el.toast.textContent = message;
+        el.toast.style.opacity = 1;
         el.toast.style.display = 'block';
-        setTimeout(() => { el.toast.style.display = 'none'; }, 1800);
+        setTimeout(() => { 
+            el.toast.style.opacity = 0;
+            setTimeout(() => { el.toast.style.display = 'none'; }, 300); // fade-out 후 숨김
+        }, 1800);
     }
 
-    function pushTimeline(icon, title, desc, amount) {
-        state.timeline = [{ icon, title, desc, amount }, ...state.timeline].slice(0, 6);
-    }
-
+    // 모달 확인 버튼 처리 로직
     function handleConfirm() {
         const value = Number(el.amountInput.value);
         if (!value || value <= 0) {
-            showToast('금액을 입력해주세요');
+            showToast('금액을 올바르게 입력해주세요');
             return;
         }
 
         if (currentAction === 'charge') {
             state.cardBalance += value;
             state.totalAssets += value;
-            pushTimeline('fa-wallet', '충전 완료', '카드에 충전되었습니다', `+${formatMoney(value)}`);
+            pushTimeline('fa-wallet', '선불계좌 충전', '간편 충전 성공', `+${formatMoney(value)}`);
             showToast('충전 완료');
         }
 
         if (currentAction === 'transfer') {
             if (value > state.cardBalance) {
-                showToast('잔액이 부족합니다');
+                showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다`);
                 return;
             }
             state.cardBalance -= value;
+            // 이체는 총 자산 내에서의 이동이므로 totalAssets는 변동 없음
             pushTimeline('fa-exchange-alt', '이체 성공', '연결계좌로 이체 처리됨', `-${formatMoney(value)}`);
             showToast('이체 완료');
         }
@@ -594,29 +651,36 @@
             const fee = { USD: 5000, EUR: 4000, JPY: 3000 }[el.selectField.value] || 5000;
             const total = value + fee;
             if (total > state.cardBalance) {
-                showToast('잔액이 부족합니다 (수수료 포함)');
+                showToast(`잔액(${formatMoney(state.cardBalance)})이 부족합니다 (수수료 ${formatMoney(fee)} 포함)`);
                 return;
             }
             state.cardBalance -= total;
+            state.totalAssets -= total; // 해외 송금은 자산 감소
             const desc = `${el.selectField.value} 송금 (수수료 ${formatMoney(fee)})`;
             pushTimeline('fa-plane-departure', '해외 송금', desc, `-${formatMoney(total)}`);
-            showToast('해외 송금 완료');
+            showToast('해외 송금 신청 완료');
         }
 
         closeModal();
-        render();
+        render(); // 상태가 변경되었으므로 화면 재렌더링
     }
 
+    // 미션 보상 받기
     function claimMission() {
-        if (!state.missionAvailable) return;
+        if (!state.missionAvailable) {
+            showToast('이미 보상을 받으셨습니다');
+            return;
+        }
         state.points += 5000;
         state.missionAvailable = false;
         pushTimeline('fa-gift', '미션 보상', '환전 미션 달성 보너스', '+5,000P');
         render();
-        showToast('5,000P가 적립되었습니다');
+        showToast('5,000P가 적립되었습니다 🎉');
     }
 
+    // 데이터 초기화
     function resetData() {
+        // 초기 상태로 복구
         state.totalAssets = 1540000;
         state.cardBalance = 840000;
         state.points = 12000;
@@ -631,11 +695,13 @@
         showToast('초기 데이터로 복구했습니다');
     }
 
+    // 이벤트 리스너 등록
     document.querySelectorAll('.action-btn').forEach(btn => {
         btn.addEventListener('click', () => openModal(btn.dataset.action));
     });
 
     el.cancelBtn.addEventListener('click', closeModal);
+    // 모달 영역 바깥 클릭 시 닫기
     el.modalBackdrop.addEventListener('click', (e) => {
         if (e.target === el.modalBackdrop) closeModal();
     });
@@ -643,6 +709,7 @@
     el.missionBanner.addEventListener('click', claimMission);
     el.resetBtn.addEventListener('click', resetData);
 
+    // 초기 화면 렌더링
     render();
 </script>
 
