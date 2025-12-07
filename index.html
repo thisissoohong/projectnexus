@@ -550,17 +550,17 @@
             <div class="charge-step active" id="charge-step-amount">
                 <div class="input-group">
                     <label for="charge-amount">충전을 원하는 금액을 입력하세요.</label>
-                    <input type="text" id="charge-amount" inputmode="decimal" placeholder="0" readonly>
+                    <input type="text" id="charge-amount" placeholder="0" readonly style="font-weight: bold; color: var(--primary-color);">
                 </div>
-                <div class="dual-currency">
+                <div class="dual-currency" style="flex-direction: column; align-items: stretch;">
                     <div class="currency-box selectable active" data-currency="krw">
                         <small style="color:var(--sub-text-color)">KRW</small>
-                        <input id="charge-krw-input" type="number" inputmode="decimal" placeholder="0">
+                        <input id="charge-krw-input" type="text" inputmode="decimal" placeholder="0">
                     </div>
-                    <div class="swap-arrow"><i class="fas fa-arrows-alt-v"></i></div>
+                    <div class="swap-arrow" style="transform: rotate(90deg); margin: -4px 0;"><i class="fas fa-exchange-alt"></i></div>
                     <div class="currency-box selectable" data-currency="usd">
                         <small style="color:var(--sub-text-color)">현지 통화 (USD)</small>
-                        <input id="charge-usd-input" type="number" inputmode="decimal" placeholder="0">
+                        <input id="charge-usd-input" type="text" inputmode="decimal" placeholder="0">
                     </div>
                 </div>
                 <button class="btn primary" id="charge-next" style="margin-top:14px; width:100%;">다음</button>
@@ -852,7 +852,7 @@
     function updateChargeDisplay() {
         const krwRounded = chargeState.krw ? Math.round(chargeState.krw) : 0;
         el.chargeKrwInput.value = krwRounded || '';
-        el.chargeUsdInput.value = chargeState.usd ? chargeState.usd.toFixed(2) : '';
+        el.chargeUsdInput.value = chargeState.usd > 0 ? chargeState.usd.toFixed(2) : '';
         el.chargeInput.value = krwRounded ? krwRounded.toLocaleString('ko-KR') : '';
     }
 
@@ -875,20 +875,22 @@
     function handleKrwInput() {
         if (chargeState.updating) return;
         const value = parseFloat(el.chargeKrwInput.value.replace(/,/g, '')) || 0;
+        chargeState.updating = true;
         chargeState.krw = Math.max(0, value);
         chargeState.usd = chargeState.krw / chargeState.rate;
-        chargeState.updating = true;
-        el.chargeUsdInput.value = chargeState.usd ? chargeState.usd.toFixed(2) : '';
+        el.chargeUsdInput.value = chargeState.usd > 0 ? chargeState.usd.toFixed(2) : (value === 0 ? '' : '0.00');
+        el.chargeInput.value = chargeState.krw ? Math.round(chargeState.krw).toLocaleString('ko-KR') : '';
         chargeState.updating = false;
     }
 
     function handleUsdInput() {
         if (chargeState.updating) return;
         const value = parseFloat(el.chargeUsdInput.value.replace(/,/g, '')) || 0;
+        chargeState.updating = true;
         chargeState.usd = Math.max(0, value);
         chargeState.krw = chargeState.usd * chargeState.rate;
-        chargeState.updating = true;
-        el.chargeKrwInput.value = chargeState.krw ? Math.round(chargeState.krw) : '';
+        el.chargeKrwInput.value = chargeState.krw > 0 ? Math.round(chargeState.krw) : (value === 0 ? '' : '0');
+        el.chargeInput.value = chargeState.krw ? Math.round(chargeState.krw).toLocaleString('ko-KR') : '';
         chargeState.updating = false;
     }
 
