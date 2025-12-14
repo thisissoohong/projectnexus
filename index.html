@@ -449,7 +449,6 @@
         <div class="pill"><i class="fas fa-bell"></i> 알림 ON</div>
     </div>
 
-    <!-- 홈 -->
     <section class="page active" id="page-home">
         <div class="content-grid">
             <div class="card">
@@ -540,7 +539,6 @@
         </div>
     </section>
 
-    <!-- 충전 페이지 -->
     <section class="page" id="page-charge">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
         <div class="card form-card">
@@ -548,21 +546,28 @@
             <p style="color:var(--sub-text-color); margin-top:4px;">카드 잔액이 총 자산에 반영됩니다.</p>
 
             <div class="charge-step active" id="charge-step-amount">
+                
                 <div class="input-group">
-                    <label for="charge-amount">충전을 원하는 금액을 입력하세요.</label>
-                    <input type="text" id="charge-amount" placeholder="0" readonly style="font-weight: bold; color: var(--primary-color);">
+                    <label for="local-currency-select">현지 통화 선택</label>
+                    <select id="local-currency-select">
+                        <option value="USD">USD (미국 달러)</option>
+                        <option value="EUR">EUR (유로)</option>
+                        <option value="AUD">AUD (호주 달러)</option>
+                    </select>
                 </div>
+
                 <div class="dual-currency" style="flex-direction: column; align-items: stretch;">
                     <div class="currency-box selectable active" data-currency="krw">
-                        <small style="color:var(--sub-text-color)">KRW</small>
+                        <small style="color:var(--sub-text-color)">KRW (원화)</small>
                         <input id="charge-krw-input" type="text" inputmode="decimal" placeholder="0">
                     </div>
                     <div class="swap-arrow" style="transform: rotate(90deg); margin: -4px 0;"><i class="fas fa-exchange-alt"></i></div>
-                    <div class="currency-box selectable" data-currency="usd">
-                        <small style="color:var(--sub-text-color)">현지 통화 (USD)</small>
-                        <input id="charge-usd-input" type="text" inputmode="decimal" placeholder="0">
+                    <div class="currency-box selectable" data-currency="local">
+                        <small style="color:var(--sub-text-color)" id="local-currency-label">현지 통화 (USD)</small>
+                        <input id="charge-local-input" type="text" inputmode="decimal" placeholder="0">
                     </div>
                 </div>
+                
                 <button class="btn primary" id="charge-next" style="margin-top:14px; width:100%;">다음</button>
             </div>
 
@@ -599,7 +604,6 @@
         </div>
     </section>
 
-    <!-- 이체 페이지 -->
     <section class="page" id="page-transfer">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
         <div class="card form-card">
@@ -613,7 +617,6 @@
         </div>
     </section>
 
-    <!-- 해외 송금 페이지 -->
     <section class="page" id="page-remit">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
         <div class="card form-card">
@@ -652,6 +655,13 @@
         ],
     };
 
+    // **새로운 환율 데이터 정의 (가정된 값)**
+    const exchangeRates = {
+        USD: 1300, // 1 USD = 1300 KRW
+        EUR: 1400, // 1 EUR = 1400 KRW
+        AUD: 850,  // 1 AUD = 850 KRW
+    };
+
     const el = {
         totalAssets: document.getElementById('total-assets'),
         cardBalance: document.getElementById('card-balance'),
@@ -662,13 +672,18 @@
         refundAlert: document.getElementById('refund-alert'),
         resetBtn: document.getElementById('reset-btn'),
         toast: document.getElementById('toast'),
-        chargeInput: document.getElementById('charge-amount'),
+        // el.chargeInput 제거
         transferInput: document.getElementById('transfer-amount'),
         remitInput: document.getElementById('remit-amount'),
         remitCurrency: document.getElementById('remit-currency'),
+        
+        // 충전 관련 요소 업데이트
         chargeKrwInput: document.getElementById('charge-krw-input'),
-        chargeUsdInput: document.getElementById('charge-usd-input'),
+        chargeLocalInput: document.getElementById('charge-local-input'), // 변경
+        localCurrencySelect: document.getElementById('local-currency-select'), // 추가
+        localCurrencyLabel: document.getElementById('local-currency-label'), // 추가
         currencyBoxes: document.querySelectorAll('.currency-box.selectable'),
+        
         chargeSteps: {
             amount: document.getElementById('charge-step-amount'),
             method: document.getElementById('charge-step-method'),
@@ -830,8 +845,9 @@
     const chargeState = {
         step: 'amount',
         krw: 0,
-        usd: 0,
-        rate: 1300,
+        local: 0, // USD에서 local로 변경
+        currency: 'USD', // 선택된 통화 (기본값 USD)
+        rate: exchangeRates['USD'], // 현재 적용 환율
         method: null,
         updating: false,
     };
@@ -843,17 +859,30 @@
     function setActiveCurrency(target) {
         chargeState.active = target;
         el.currencyBoxes.forEach(box => {
-            box.classList.toggle('active', box.dataset.currency === target);
+            const targetData = (target === 'krw' ? 'krw' : 'local');
+            box.classList.toggle('active', box.dataset.currency === targetData);
         });
         if (target === 'krw') el.chargeKrwInput.focus();
-        if (target === 'usd') el.chargeUsdInput.focus();
+        if (target === 'local') el.chargeLocalInput.focus();
     }
 
     function updateChargeDisplay() {
         const krwRounded = chargeState.krw ? Math.round(chargeState.krw) : 0;
         el.chargeKrwInput.value = krwRounded || '';
-        el.chargeUsdInput.value = chargeState.usd > 0 ? chargeState.usd.toFixed(2) : '';
-        el.chargeInput.value = krwRounded ? krwRounded.toLocaleString('ko-KR') : '';
+        el.chargeLocalInput.value = chargeState.local > 0 ? chargeState.local.toFixed(2) : '';
+    }
+    
+    // 현지 통화 선택 시 환율 업데이트
+    function updateLocalCurrency() {
+        chargeState.currency = el.localCurrencySelect.value;
+        chargeState.rate = exchangeRates[chargeState.currency];
+        el.localCurrencyLabel.textContent = `현지 통화 (${chargeState.currency})`;
+        
+        // 통화가 바뀌면 현재 입력된 KRW 값 기준으로 현지 통화 재계산
+        chargeState.local = chargeState.krw / chargeState.rate;
+        
+        updateChargeDisplay();
+        showToast(`환율이 ${chargeState.currency} (${chargeState.rate.toLocaleString()} KRW)로 변경되었습니다.`);
     }
 
     function setChargeStep(step) {
@@ -867,7 +896,7 @@
             el.choiceBtns.forEach(btn => btn.classList.remove('active'));
             setActiveCurrency('krw');
             chargeState.krw = 0;
-            chargeState.usd = 0;
+            chargeState.local = 0;
             updateChargeDisplay();
         }
     }
@@ -877,31 +906,29 @@
         const value = parseFloat(el.chargeKrwInput.value.replace(/,/g, '')) || 0;
         chargeState.updating = true;
         chargeState.krw = Math.max(0, value);
-        chargeState.usd = chargeState.krw / chargeState.rate;
-        el.chargeUsdInput.value = chargeState.usd > 0 ? chargeState.usd.toFixed(2) : (value === 0 ? '' : '0.00');
-        el.chargeInput.value = chargeState.krw ? Math.round(chargeState.krw).toLocaleString('ko-KR') : '';
+        chargeState.local = chargeState.krw / chargeState.rate;
+        el.chargeLocalInput.value = chargeState.local > 0 ? chargeState.local.toFixed(2) : (value === 0 ? '' : '0.00');
         chargeState.updating = false;
     }
 
-    function handleUsdInput() {
+    function handleLocalInput() {
         if (chargeState.updating) return;
-        const value = parseFloat(el.chargeUsdInput.value.replace(/,/g, '')) || 0;
+        const value = parseFloat(el.chargeLocalInput.value.replace(/,/g, '')) || 0;
         chargeState.updating = true;
-        chargeState.usd = Math.max(0, value);
-        chargeState.krw = chargeState.usd * chargeState.rate;
+        chargeState.local = Math.max(0, value);
+        chargeState.krw = chargeState.local * chargeState.rate;
         el.chargeKrwInput.value = chargeState.krw > 0 ? Math.round(chargeState.krw) : (value === 0 ? '' : '0');
-        el.chargeInput.value = chargeState.krw ? Math.round(chargeState.krw).toLocaleString('ko-KR') : '';
         chargeState.updating = false;
     }
 
     function gotoMethodStep() {
         const amount = getChargeAmountKrw();
         if (!amount || amount <= 0) {
-            showToast('금액을 입력하세요');
+            showToast('충전할 금액을 입력하세요');
             return;
         }
         chargeState.krw = amount;
-        chargeState.usd = amount / chargeState.rate;
+        chargeState.local = amount / chargeState.rate;
         updateChargeDisplay();
         setChargeStep('method');
     }
@@ -930,7 +957,7 @@
         render();
         showToast('충전 완료');
         chargeState.krw = 0;
-        chargeState.usd = 0;
+        chargeState.local = 0;
         updateChargeDisplay();
         setChargeStep('amount');
         navigate('page-home');
@@ -952,7 +979,7 @@
         render();
         showToast('충전 완료');
         chargeState.krw = 0;
-        chargeState.usd = 0;
+        chargeState.local = 0;
         el.cardNumber.value = '';
         el.cardExp.value = '';
         el.cardCvc.value = '';
@@ -979,12 +1006,17 @@
     el.barcodeComplete.addEventListener('click', completeCashCharge);
     el.cardSubmit.addEventListener('click', completeCardCharge);
 
+    // 충전 페이지 입력 및 선택 이벤트
     el.chargeKrwInput.addEventListener('input', handleKrwInput);
-    el.chargeUsdInput.addEventListener('input', handleUsdInput);
+    el.chargeLocalInput.addEventListener('input', handleLocalInput);
+    el.localCurrencySelect.addEventListener('change', updateLocalCurrency); 
+
     el.currencyBoxes.forEach(box => box.addEventListener('click', () => setActiveCurrency(box.dataset.currency)));
 
+    // 초기 실행
     render();
     updateChargeDisplay();
+    updateLocalCurrency(); // 페이지 로드 시 초기 환율 설정 및 레이블 업데이트
 </script>
 
 </body>
