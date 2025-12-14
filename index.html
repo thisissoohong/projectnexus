@@ -633,6 +633,8 @@
             </div>
 
             <div class="charge-step" id="charge-step-method">
+                <a class="back-link" id="charge-back-to-amount" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> 금액 설정으로 돌아가기</a>
+                
                 <div class="charge-amount-confirm" id="charge-amount-confirm"></div>
 
                 <p style="font-weight:700; margin:0 0 8px;">어디서 충전할까요?</p>
@@ -738,14 +740,14 @@
         remitInput: document.getElementById('remit-amount'),
         remitCurrency: document.getElementById('remit-currency'),
         
-        // 충전 관련 요소 업데이트
+        // 충전 관련 요소
         chargeKrwInput: document.getElementById('charge-krw-input'),
         chargeLocalInput: document.getElementById('charge-local-input'),
         localCurrencyLabel: document.getElementById('local-currency-label'),
         currencyBoxes: document.querySelectorAll('.dual-currency .currency-box.selectable'),
         currencyChoiceGrid: document.getElementById('currency-choice-grid'),
         currencyChoiceBtns: document.querySelectorAll('.currency-choice-grid .currency-choice'), 
-        chargeAmountConfirm: document.getElementById('charge-amount-confirm'), // UX 개선 추가
+        chargeAmountConfirm: document.getElementById('charge-amount-confirm'), 
         
         chargeSteps: {
             amount: document.getElementById('charge-step-amount'),
@@ -757,6 +759,7 @@
         cardSubmit: document.getElementById('card-submit'),
         choiceBtns: document.querySelectorAll('.choice'),
         chargeNext: document.getElementById('charge-next'),
+        chargeBackToAmount: document.getElementById('charge-back-to-amount'), // 새 버튼 참조
         cardNumber: document.getElementById('card-number'),
         cardExp: document.getElementById('card-exp'),
         cardCvc: document.getElementById('card-cvc'),
@@ -952,6 +955,35 @@
         updateChargeDisplay();
     }
 
+    function gotoMethodStep() {
+        const amount = getChargeAmountKrw();
+        
+        // **금액 제한 조건**
+        const MIN_CHARGE = 10000;
+        const MAX_CHARGE = 200000;
+
+        if (!amount || amount <= 0) {
+            showToast('충전할 금액을 입력하세요');
+            return;
+        }
+        
+        if (amount < MIN_CHARGE) {
+            showToast(`최소 충전 금액은 ${formatMoney(MIN_CHARGE)}입니다.`);
+            return;
+        }
+
+        if (amount > MAX_CHARGE) {
+            showToast(`1회 최대 충전 금액은 ${formatMoney(MAX_CHARGE)}입니다.`);
+            return;
+        }
+        // **금액 제한 조건 끝**
+
+        chargeState.krw = amount;
+        chargeState.local = amount / chargeState.rate; 
+        updateChargeDisplay();
+        setChargeStep('method');
+    }
+
     function setChargeStep(step) {
         chargeState.step = step;
         Object.values(el.chargeSteps).forEach(s => s.classList.remove('active'));
@@ -963,9 +995,8 @@
             el.cardForm.style.display = 'none';
             el.choiceBtns.forEach(btn => btn.classList.remove('active'));
             setActiveCurrency('krw');
-            chargeState.krw = 0;
-            chargeState.local = 0;
             updateChargeDisplay();
+
         } else if (step === 'method') {
             // 2단계 진입 시 확정 금액 표시
             const krwAmount = getChargeAmountKrw();
@@ -991,19 +1022,6 @@
         chargeState.krw = chargeState.local * chargeState.rate;
         el.chargeKrwInput.value = chargeState.krw > 0 ? Math.round(chargeState.krw) : (value === 0 ? '' : '0');
         chargeState.updating = false;
-    }
-
-    function gotoMethodStep() {
-        const amount = getChargeAmountKrw();
-        if (!amount || amount <= 0) {
-            showToast('충전할 금액을 입력하세요');
-            return;
-        }
-        // 이 시점에 chargeState에 KRW와 Local 금액이 확정됨
-        chargeState.krw = amount;
-        chargeState.local = amount / chargeState.rate; // 다시 계산하여 혹시 모를 오차 방지
-        updateChargeDisplay();
-        setChargeStep('method');
     }
 
     function selectMethod(method) {
@@ -1075,6 +1093,12 @@
     el.resetBtn.addEventListener('click', resetData);
 
     el.chargeNext.addEventListener('click', gotoMethodStep);
+    
+    // 2단계 -> 1단계로 돌아가기 이벤트 추가
+    el.chargeBackToAmount.addEventListener('click', () => {
+        setChargeStep('amount');
+    });
+
     el.choiceBtns.forEach(btn => btn.addEventListener('click', () => selectMethod(btn.dataset.method)));
     el.barcodeComplete.addEventListener('click', completeCashCharge);
     el.cardSubmit.addEventListener('click', completeCardCharge);
