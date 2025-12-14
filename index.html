@@ -426,13 +426,18 @@
             border-color: var(--primary-color);
             box-shadow: 0 4px 12px rgba(45,108,255,0.12);
         }
+        /* 국기 이모지 사용을 위한 스타일 변경 */
         .currency-flag {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 24px; /* 이모지 크기 */
+            line-height: 30px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 이모지가 원형을 벗어나지 않도록 */
         }
         /* 기존 choice-grid 스타일 (충전 방식 선택) */
         .choice-grid {
@@ -580,21 +585,17 @@
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
         <div class="card form-card">
             <h2 style="margin-top:0;">선불계좌 충전</h2>
-            <p style="color:var(--sub-text-color); margin-top:4px;">카드 잔액이 총 자산에 반영됩니다. (환율 1,300원)</p>
+            <p style="color:var(--sub-text-color); margin-top:4px;">카드 잔액이 총 자산에 반영됩니다.</p>
 
             <div class="currency-choice-grid" id="currency-choice-grid">
                 <div class="currency-choice active" data-currency="USD">
-                    <div class="currency-flag" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgZmlsbD0iI2JiMjYxYSIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNTYgNTExLjljMTY4LjEgMCAzMDUuOS05NC44IDMwNS45LTI1NS45cy0xMzcuOC0yNTUuOS0zMDUuOS0yNTUuOS0zMDUuOSAxMzcuOC0zMDUuOSAyNTUuOSAxMzcuOCAyNTUuOSAzMDUuOSAyNTUuOXoiLz48cGF0aCBmaWxsPSIjNDEzODVmIiBkPSJNMjU2IDcuNmMtNjcuOSAwLTEyMS40IDI1LjgtMTQ2LjIgNDcuN2E2LjUgNi41IDAgMCAwLTEuMyA4LjcgNi41IDYuNSAwIDAgMCA2LjQgMi4yYzk0LjUtMTkuNSAxOTEuMS0xOS41IDI4NS42IDAgNi41IDIuMiAxMS40LTYuOCAxMS40LTEyLjggMC0yMS40LTUzLjQtNDcuNi0xNDkuNi00Ny42eiIvPjxwYXRoIGZpbGw9IiM0MTM4NWYiIGQ9Ik0xMjAuMyA5Mi4xYTYuNSA2LjUgMCAwIDAtNi40IDEwLjJjMzUuOCA3MS42IDYxLjcgMTUxLjUgNzcuNCAyMzYuNSA0LjcgMjUuOC0uNyA1Mi45LTE1LjUgNzguMy0zMi4xIDU3LjUtODguNCAxMDMuOC0xNzcuOCA5MC4yLTcuNC0xLjItMTIuNyA0LjktMTIuNyAxMC4zIDAgNS44IDMuNyAxMi40IDkuNyAxNi40QzE0MC43IDQ5My41IDI0My43IDUwNy45IDM1NS40IDQ5Ny41Yy42LS4xIDEuMi0uMiAxLjctLjNjMy4yLS42IDUuOC0zLjYgNS44LTYuOSAwLTUtNC4yLTEwLTkuNS0xMi42LTguNC0zMi0xNC40LTY0LjItMTQuNC05OC45IDAtMzIuNCA1LjgtNjUuNiAxNS05Ny41IDcuOC0yNy43IDE3LjYtNTcuMiAyOC44LTg4IDExLjctMzIuOSAyNC42LTY3LjQgNDEuNi05Mi44IDExLjEtMTYuMiA5LjctMzguMS0yLjQtNTQuOWMtMTIuMi0xNi45LTI2LjktMzEuNy00NC40LTQzLjZhNi41IDYuNSAwIDAgMC03LjYgMS40em0zOC40IDMzNy40Yy0yMC4xIDAtMzYuNC0xNi4zLTM2LjQtMzYuNHMzNC43LTM2LjQgNTQuOC0zNi40IDM2LjQgMTYuMyAzNi40IDM2LjQtMTYuMyAzNi40LTM2LjQgMzYuNHptMTczLjcgMjMuNmMtMjAuMSAwLTM2LjQtMTYuMy0zNi40LTM2LjRzMTYuMy0zNi40IDM2LjQtMzYuNCAzNi40IDE2LjMgMzYuNCAzNi40LTE2LjIgMzYuNC0zNi40IDM2LjR6Ii8+PC9zdmc=')"></div>
-                    USD
+                    <span class="currency-flag">🇺🇸</span> USD
                 </div>
                 <div class="currency-choice" data-currency="EUR">
-                    <div class="currency-flag" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgZmlsbD0iIzAwMzM5OSIvPjxwYXRoIGZpbGw9IiNmZmNmMDAiIGQ9Ik0zMjIgMTE3LjhjMTMuOS0yNC4yIDMzLjItNDUuNyA1NS43LTYxLTYzLjktMTguOC0xMzguNy0xOC44LTIwMi42IDBsNTUuNyA2MSAxMDQuOCAwaDUxLDR6bS0yMjEuMSA4Ny4zYzE1LjEtMjYuMSAzMi4xLTQ3LjUgNTIuOC02NC43LS0zLjItLjUtNi41LS43LTkuOC0uNi00Ny44LS0uOC04Ni43IDM3LjYtODYuNyA4Ni42IDAgMTcuNSA1LjMgMzQuNSAxNS4xIDQ4LjR6bTI3Mi4yIDEwNC43YzIzLjkgMTEuNyA0NS43IDE4LjkgNjkuMyAyMi43Yy0yLjkgMzAuNS02LjcgNjAuMy0xMS43IDg4LjItLjMtMi4zLS41LTQuNy0uNi03IDAtNjMuOS0xNi4zLTEyNS43LTQ2LjktMTc0eiIvPjxwYXRoIGZpbGw9IiNmZmNmMDAiIGQ9Ik0yNTYgMzU2LjRjLTU2LjUgMC0xMDcuNy0xMi4xLTE1NS44LTM0LjUtNDMuNC0yMC4yLTc2LjMtNDkuOS0xMDIuNS03OS44LTEuNi0xLjktMi41LTQuNC0yLjctNy4xLjEtMjEuNyAxNi44LTQwLjkgMzguNS00NC4xIDYuNS0uOSAxMy42LS4zIDE5LjYgMy42IDMyLjQgMjEuNiA2Ni45IDM3LjMgMTA0LjYgNDcuNiAxNC42IDQgMzAgNi4zIDQ2LjIgNy4yIDIuMi4xIDQuNC41IDYuNy44eiIvPjxwYXRoIGZpbGw9IiNmZmNmMDAiIGQ9Ik0yNTYgMzEwLjRjLTQ0LjUgMC04NC41LTkuOC0xMTcuNC0yNy43Yy01LjMtMy4zLTguNy05LjItOC43LTE1LjkgMC02LjQgMy45LTEyLjQgMTAuMy0xNS41IDQxLjYtMTguNSAxMzctNTcuMiAxNzUtMTEwLjMgMS0xLjEgMi42LTEuOSA0LjQtMi4xYy43LS4xIDEuNS0uMSAyLjQtLjFjMS43IDAgMy40LjMgNS4xLjggMTYuMiA0LjMgMzMuNSA4LjIgNTEuOSA5LjkgMjEuNyAxLjkgNDMuMiAxLjcgNjQuOC0uNC0yMC4xLTI1LjQtMzQuOC00My4yLTQ1LjEtNjIuNy0yMS42IDExLjgtNDQuNiAxOC4yLTY4LjIgMTguMi01MC44IDAtOTkuMi0yMy45LTE0NS42LTY2LjktMzEuMS0yOS44LTUzLjUtNjcuNi03MS44LTEwOS44LTcuOC0xOC4xLTE2LjktNDMuOC0yOS4yLTczLTYtMTQuNS0xMS43LTMyLjgtMTcuMy01Mi40eiIvPjxwYXRo fill="#ffcc00" d="M256 56.4v404.4c70.7 0 132.5-39.6 177.2-97.7 17.9-21.7 32.2-46.7 42.7-72.8 25.6-58.2 37.6-120.2 32.7-184.3-2.8-33.2-9.8-65.8-19.8-96.8-1.9-6-4.8-10.7-8.6-14.2-6.9-6.6-14.7-10.1-22.5-10.1-79.5 0-146.4 50.6-189.9 117.4-.5-1.7-1-3.4-1.5-5.1 14.7-42.6 37.3-79.5 66-115.6 3.4-4.1 7.4-7.7 11.9-10.5zm51.9 121.8c-20.5 0-37.1 16.6-37.1 37.1s16.6 37.1 37.1 37.1 37.1-16.6 37.1-37.1-16.6-37.1-37.1-37.1zm-153.6 0c-20.5 0-37.1 16.6-37.1 37.1s16.6 37.1 37.1 37.1 37.1-16.6 37.1-37.1-16.6-37.1-37.1-37.1zM154.3 325.7c-20.5 0-37.1 16.6-37.1 37.1s16.6 37.1 37.1 37.1 37.1-16.6 37.1-37.1-16.6-37.1-37.1-37.1zm153.6 0c-20.5 0-37.1 16.6-37.1 37.1s16.6 37.1 37.1 37.1 37.1-16.6 37.1-37.1-16.6-37.1-37.1-37.1z"/>
-</svg>')"></div>
-                    EUR
+                    <span class="currency-flag">🇪🇺</span> EUR
                 </div>
                 <div class="currency-choice" data-currency="AUD">
-                    <div class="currency-flag" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgZmlsbD0iI2JiMjYxYSIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNTYgNTExLjljMTY4LjEgMCAzMDUuOS05NC44IDMwNS45LTI1NS45cy0xMzcuOC0yNTUuOS0zMDUuOS0yNTUuOS0zMDUuOSAxMzcuOC0zMDUuOSAyNTUuOSAxMzcuOCAyNTUuOSAzMDUuOSAyNTUuOXoiLz48cGF0aCBmaWxsPSIjNDEzODVmIiBkPSJNMjU2IDcuNmMtNjcuOSAwLTEyMS40IDI1LjgtMTQ2LjIgNDcuN2E2LjUgNi41IDAgMCAwLTEuMyA4LjcgNi41IDYuNSAwIDAgMCA2LjQgMi4yYzk0LjUtMTkuNSAxOTEuMS0xOS41IDI4NS42IDAgNi41IDIuMiAxMS40LTYuOCAxMS40LTEyLjggMC0yMS40LTUzLjQtNDcuNi0xNDkuNi00Ny42eiIvPjxwYXRoIGZpbGw9IiM0MTM4NWYiIGQ9Ik0xMjAuMyA5Mi4xYTYuNSA2LjUgMCAwIDAtNi40IDEwLjJjMzUuOCAxMS45IDYxLjcgMjUuOCAzNS44IDc5LjIgNDcuNSAzMi4xIDczLjUgNDUuNyA5NS4xIDU3LjUgNS41IDIuOCAxMC42IDcuNyAxNS4xIDE1LjUgMTIuMyAxOS45IDE4LjEgNDIuNyAxNS41IDY2LjItMS45IDE1LjEgMTQuNSAzMi4zIDQyLjMgMjkuM2M0LjctLjUgOS41LS43IDE0LjUtLjcgNTEuNiAwIDk1LjEgMTYuMyAxMjUuMSAzOC43IDEuNyAxLjMgMi44IDMuMyAyLjkgNS43IDAgMi40LTEuMiA0LjUtMy42IDYtMTYuOSAxMC4zLTM3LjkgMTYuNy01OS40IDE2LjctMjcuMiAwLTU1LjItNi43LTgxLjQtMjAuM2E2LjUgNi41IDAgMCAwLTMuMy0uNyA2LjUgNi41IDAgMCAwLTYgNC41Yy01LjUgMTAuOS0xMC4zIDIxLjgtMTMuOCAzMy03LjcgMjIuNi0xMi45IDQ2LjItMTUgNzAuMy0uMiAxLjYtLjIgMy4yLS4yIDQuOCAwIDYuMiAxLjEgMTIuMiAzLjMgMTcuOCAxLjYgNC4zLS44IDguOC01LjEgMTAuMy0xOC45IDYuNS0zOS40IDkuNC01OS41IDguNy0yNS41LS44LTQ5LjctOC40LTcxLjgtMjIuMWE2LjUgNi41IDAgMCAwLTcuNi0xLjR6bTQxLjYgMzU3LjVjLTIwLjEgMC0zNi40LTE2LjMtMzYuNC0zNi40czE2LjMtMzYuNCAzNi40LTM2LjQgMzYuNCAxNi4zIDM2LjQgMzYuNC0xNi4zIDM2LjQtMzYuNCAzNi40em0xNTguMS0xMzEuMmMtMjAuMSAwLTM2LjQtMTYuMy0zNi40LTM2LjRzMTYuMy0zNi40IDM2LjQtMzYuNCAzNi40IDE2LjMgMzYuNCAzNi40LTE2LjMgMzYuNC0zNi40IDM2LjR6Ii8+PC9zdmc=')"></div>
-                    AUD
+                    <span class="currency-flag">🇦🇺</span> AUD
                 </div>
             </div>
 
@@ -917,7 +918,7 @@
         el.chargeLocalInput.value = chargeState.local > 0 ? chargeState.local.toFixed(2) : '';
     }
     
-    // 현지 통화 선택 버튼 클릭 핸들러
+    // 현지 통화 선택 버튼 클릭 핸들러 (토스트 메시지 제거됨)
     function updateLocalCurrency(currencyCode) {
         if (chargeState.currency === currencyCode) return;
 
@@ -933,7 +934,6 @@
         chargeState.local = chargeState.krw / chargeState.rate;
         
         updateChargeDisplay();
-        showToast(`충전 통화가 ${chargeState.currency} (${chargeState.rate.toLocaleString()} KRW)로 변경되었습니다.`);
     }
 
     function setChargeStep(step) {
