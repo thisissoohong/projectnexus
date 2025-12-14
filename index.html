@@ -368,7 +368,7 @@
         /* 수정된 dual-currency 스타일 */
         .dual-currency {
             display: flex;
-            align-items: center; /* 아이템들을 중앙 정렬 */
+            align-items: center;
             gap: 12px;
             padding: 12px;
             border-radius: 12px;
@@ -397,14 +397,14 @@
         .swap-arrow {
             font-size: 18px;
             color: var(--primary-color);
-            align-self: center; /* 수직 중앙 정렬 */
+            align-self: center;
         }
         /* 현지 통화 선택 버튼 그리드 스타일 */
         .currency-choice-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3개의 버튼이 나란히 */
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 15px; /* 입력창과 분리 */
+            margin-bottom: 15px;
         }
         .currency-choice {
             padding: 12px;
@@ -431,15 +431,27 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            font-size: 24px; /* 이모지 크기 */
+            font-size: 24px;
             line-height: 30px;
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* 이모지가 원형을 벗어나지 않도록 */
+            overflow: hidden;
         }
-        /* 기존 choice-grid 스타일 (충전 방식 선택) */
+
+        /* 충전 2단계 확정 금액 스타일 */
+        .charge-amount-confirm {
+            background: #f1f5ff;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
         .choice-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -587,19 +599,22 @@
             <h2 style="margin-top:0;">선불계좌 충전</h2>
             <p style="color:var(--sub-text-color); margin-top:4px;">카드 잔액이 총 자산에 반영됩니다.</p>
 
-            <div class="currency-choice-grid" id="currency-choice-grid">
-                <div class="currency-choice active" data-currency="USD">
-                    <span class="currency-flag">🇺🇸</span> USD
-                </div>
-                <div class="currency-choice" data-currency="EUR">
-                    <span class="currency-flag">🇪🇺</span> EUR
-                </div>
-                <div class="currency-choice" data-currency="AUD">
-                    <span class="currency-flag">🇦🇺</span> AUD
-                </div>
-            </div>
-
             <div class="charge-step active" id="charge-step-amount">
+                <div class="currency-choice-grid" id="currency-choice-grid">
+                    <div class="currency-choice active" data-currency="USD">
+                        <span class="currency-flag">🇺🇸</span>
+                        USD
+                    </div>
+                    <div class="currency-choice" data-currency="EUR">
+                        <span class="currency-flag">🇪🇺</span>
+                        EUR
+                    </div>
+                    <div class="currency-choice" data-currency="AUD">
+                        <span class="currency-flag">🇦🇺</span>
+                        AUD
+                    </div>
+                </div>
+
                 <div class="dual-currency" id="dual-currency">
                     <div class="currency-box selectable active" data-currency="krw">
                         <small style="color:var(--sub-text-color)">KRW</small>
@@ -618,6 +633,8 @@
             </div>
 
             <div class="charge-step" id="charge-step-method">
+                <div class="charge-amount-confirm" id="charge-amount-confirm"></div>
+
                 <p style="font-weight:700; margin:0 0 8px;">어디서 충전할까요?</p>
                 <div class="choice-grid">
                     <div class="choice" data-method="cash"><i class="fas fa-store"></i> 편의점 KRW 현금 충전</div>
@@ -701,11 +718,10 @@
         ],
     };
 
-    // **새로운 환율 데이터 정의 (가정된 값)**
     const exchangeRates = {
-        USD: 1300, // 1 USD = 1300 KRW
-        EUR: 1400, // 1 EUR = 1400 KRW
-        AUD: 850,  // 1 AUD = 850 KRW
+        USD: 1300,
+        EUR: 1400,
+        AUD: 850,
     };
 
     const el = {
@@ -729,6 +745,7 @@
         currencyBoxes: document.querySelectorAll('.dual-currency .currency-box.selectable'),
         currencyChoiceGrid: document.getElementById('currency-choice-grid'),
         currencyChoiceBtns: document.querySelectorAll('.currency-choice-grid .currency-choice'), 
+        chargeAmountConfirm: document.getElementById('charge-amount-confirm'), // UX 개선 추가
         
         chargeSteps: {
             amount: document.getElementById('charge-step-amount'),
@@ -918,7 +935,6 @@
         el.chargeLocalInput.value = chargeState.local > 0 ? chargeState.local.toFixed(2) : '';
     }
     
-    // 현지 통화 선택 버튼 클릭 핸들러 (토스트 메시지 제거됨)
     function updateLocalCurrency(currencyCode) {
         if (chargeState.currency === currencyCode) return;
 
@@ -940,6 +956,7 @@
         chargeState.step = step;
         Object.values(el.chargeSteps).forEach(s => s.classList.remove('active'));
         el.chargeSteps[step].classList.add('active');
+        
         if (step === 'amount') {
             chargeState.method = null;
             el.barcodeBox.style.display = 'none';
@@ -949,6 +966,10 @@
             chargeState.krw = 0;
             chargeState.local = 0;
             updateChargeDisplay();
+        } else if (step === 'method') {
+            // 2단계 진입 시 확정 금액 표시
+            const krwAmount = getChargeAmountKrw();
+            el.chargeAmountConfirm.textContent = `${formatMoney(krwAmount)} KRW를 충전합니다. (약 ${chargeState.local.toFixed(2)} ${chargeState.currency})`;
         }
     }
 
@@ -978,8 +999,9 @@
             showToast('충전할 금액을 입력하세요');
             return;
         }
+        // 이 시점에 chargeState에 KRW와 Local 금액이 확정됨
         chargeState.krw = amount;
-        chargeState.local = amount / chargeState.rate;
+        chargeState.local = amount / chargeState.rate; // 다시 계산하여 혹시 모를 오차 방지
         updateChargeDisplay();
         setChargeStep('method');
     }
@@ -1072,7 +1094,6 @@
     // 초기 실행
     render();
     updateChargeDisplay();
-    // 초기 로드 시 USD 버튼이 활성화되도록 명시적으로 호출
     updateLocalCurrency('USD'); 
 </script>
 
