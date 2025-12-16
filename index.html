@@ -122,7 +122,7 @@
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
 
-        /* --- 충전하기 스타일 (복원됨) --- */
+        /* --- 충전하기 스타일 --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .currency-choice { padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-weight: 700; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; transition: all 0.2s; }
         .currency-choice.active { border-color: var(--primary-color); background-color: var(--button-bg-soft); color: var(--primary-color); box-shadow: 0 2px 8px rgba(243, 115, 33, 0.15); }
@@ -193,7 +193,6 @@
             display: flex; align-items: center; justify-content: center; font-weight: 700; color: #555; font-size: 18px;
             position: relative;
         }
-        /* Nexus 뱃지 */
         .badge-nexus {
             position: absolute; bottom: -2px; right: -2px; background: var(--primary-color); color: white;
             font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
@@ -201,6 +200,35 @@
         .recipient-info { flex: 1; }
         .recipient-name { font-size: 16px; font-weight: 700; color: var(--text-color); margin-bottom: 4px; }
         .recipient-detail { font-size: 13px; color: var(--sub-text-color); }
+
+        /* [NEW] 송금 금액 입력창 스타일 (충전 페이지 느낌) */
+        .big-money-input-wrapper {
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(243, 115, 33, 0.1);
+        }
+        .big-money-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 32px;
+            font-weight: 800;
+            outline: none;
+            text-align: center;
+            color: var(--text-color);
+        }
+        .big-money-input::placeholder { color: #ccc; }
+        /* 숫자 키패드용 */
+        .big-money-input[type="number"] { -moz-appearance: textfield; }
+        .big-money-input[type="number"]::-webkit-outer-spin-button, 
+        .big-money-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
 
         /* Bottom Floating Bar */
         .bottom-floating-bar {
@@ -253,8 +281,8 @@
         </div>
 
         <div class="balance-area">
-            <div class="currency">총 잔액 (USD 환산)</div>
-            <div class="amount" id="total-assets">$3,860.00</div>
+            <div class="currency">총 잔액 (KRW)</div>
+            <div class="amount" id="total-assets">₩5,000,000</div>
         </div>
 
         <div class="action-tray">
@@ -482,9 +510,10 @@
                     <div id="selected-recipient-info" style="font-size:13px; color:#666;"></div>
                 </div>
 
-                <div class="input-group">
-                    <label>얼마를 보낼까요?</label>
-                    <input type="number" id="transfer-amount" min="0" inputmode="numeric" placeholder="예: 30000">
+                <div style="margin-bottom:6px; font-size:14px; color:#666; text-align:center;">보낼 금액</div>
+                
+                <div class="big-money-input-wrapper">
+                    <input type="number" id="transfer-amount" class="big-money-input" placeholder="0" inputmode="numeric">
                 </div>
                 
                 <div style="display:flex; gap:10px; margin-top:20px;">
@@ -535,7 +564,8 @@
     // 앱 데이터 및 상태 관리
     // ==========================================
     const state = {
-        totalAssetsUSD: 3860.00,
+        // [수정] 기본 잔액을 KRW로 설정
+        totalAssetsKRW: 5000000, 
         timeline: [
             { icon: 'fa-wallet', title: '선불계좌 충전', desc: '간편 충전 성공', amount: '+₩200,000' },
             { icon: 'fa-plane', title: '항공권 결제', desc: 'Korea → USA', amount: '-₩650,000' },
@@ -548,6 +578,11 @@
         AUD: 850,
         JPY: 900 
     };
+
+    // 화면 초기화 시 잔액 표시
+    function renderBalance() {
+        document.getElementById('total-assets').innerText = '₩' + state.totalAssetsKRW.toLocaleString();
+    }
 
     // ==========================================
     // 네비게이션 로직
@@ -585,16 +620,18 @@
     }
 
     // ==========================================
-    // 송금하기 로직 (New)
+    // 송금하기 로직
     // ==========================================
     function selectRecipient(name, info) {
         // UI 업데이트
         document.getElementById('selected-recipient-name').innerText = name;
         document.getElementById('selected-recipient-info').innerText = info;
         
-        // 화면 전환 (리스트 숨기고 입력창 표시)
+        // 화면 전환
         document.getElementById('transfer-step-1').classList.add('hidden');
         document.getElementById('transfer-step-2').classList.remove('hidden');
+        // 키보드 자동으로 올라오게 하기 위해 focus 시도 (모바일 정책상 클릭 필요할 수 있음)
+        document.getElementById('transfer-amount').focus();
     }
 
     function resetTransfer() {
@@ -604,18 +641,23 @@
     }
 
     function submitTransfer() {
-        const val = document.getElementById('transfer-amount').value;
+        const val = parseInt(document.getElementById('transfer-amount').value) || 0;
         const name = document.getElementById('selected-recipient-name').innerText;
         
-        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
         
-        showToast(`${name}님에게 송금이 완료되었습니다.`);
+        // 잔액 차감 및 반영
+        state.totalAssetsKRW -= val;
+        renderBalance();
+
+        showToast(`${name}님에게 ${val.toLocaleString()}원 송금 완료`);
         resetTransfer();
         setTimeout(() => navigate('page-home'), 1000);
     }
 
     // ==========================================
-    // 충전하기 로직 (기존 유지)
+    // 충전하기 로직
     // ==========================================
     let chargeAmount = 0;
     let selectedCurrency = 'USD';
@@ -700,15 +742,21 @@
             }
         }
         showToast(`${chargeAmount.toLocaleString()}원 충전 완료!`);
-        const rate = exchangeRates[selectedCurrency] || 1300;
-        state.totalAssetsUSD += (chargeAmount / rate);
-        document.getElementById('total-assets').innerText = `$${state.totalAssetsUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        
+        // 잔액 추가 (KRW)
+        state.totalAssetsKRW += chargeAmount;
+        renderBalance();
+
         setTimeout(() => navigate('page-home'), 1200);
     }
 
     function submitRemit() {
-        const val = document.getElementById('remit-amount').value;
-        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        const val = parseInt(document.getElementById('remit-amount').value) || 0;
+        if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
+
+        state.totalAssetsKRW -= val;
+        renderBalance();
         showToast('환전 신청이 완료되었습니다.');
         document.getElementById('remit-amount').value = '';
         navigate('page-home');
@@ -722,6 +770,7 @@
             });
         });
         resetCharge();
+        renderBalance(); // 초기 잔액 표시
     });
 
 </script>
