@@ -122,22 +122,39 @@
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
 
-        /* --- 충전하기 스타일 --- */
+        /* --- 충전하기 스타일 (복원됨) --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .currency-choice { padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-weight: 700; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; transition: all 0.2s; }
         .currency-choice.active { border-color: var(--primary-color); background-color: var(--button-bg-soft); color: var(--primary-color); box-shadow: 0 2px 8px rgba(243, 115, 33, 0.15); }
         
-        .dual-currency { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #F8F9FA; margin-bottom: 15px; border: 1px solid #EEEEEE; }
-        .currency-box { flex: 1; padding: 8px; }
+        /* [복원] 듀얼 커런시 디자인 */
+        .dual-currency { 
+            display: flex; align-items: center; gap: 10px; padding: 12px; 
+            border-radius: 12px; background: #F8F9FA; margin-bottom: 15px; border: 1px solid #EEEEEE; 
+        }
+        .currency-box { 
+            flex: 1; padding: 10px; border-radius: 10px; 
+            transition: all 0.2s; border: 1px solid transparent; /* 기본 테두리 투명 */
+        }
+        /* KRW 입력칸 강조 (원래 스타일 복원) */
+        .currency-box.active-input {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(243, 115, 33, 0.1);
+        }
+
+        .swap-arrow { color: var(--primary-color); font-size: 18px; padding: 0 5px; }
+
+        /* 입력 필드 스타일 */
+        .currency-box input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; outline: none; text-align: right; margin-top: 5px; color: var(--text-color); }
         
-        /* KRW 입력 필드 스타일 (수정됨: 숫자 키패드) */
-        .currency-box input[type="number"] { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; outline: none; text-align: right; margin-top: 5px; color: var(--text-color); -moz-appearance: textfield; }
-        .currency-box input[type="number"]::-webkit-outer-spin-button, .currency-box input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        /* 숫자 키패드용 */
+        .currency-box input[type="number"] { -moz-appearance: textfield; }
+        .currency-box input[type="number"]::-webkit-outer-spin-button, 
+        .currency-box input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
         .currency-box input::placeholder { color: #ccc; font-weight: 400; font-size: 18px; }
-
-        /* Readonly Local Currency */
-        .currency-box input[readonly] { color: var(--primary-color); }
-
+        .currency-box input[readonly] { color: var(--primary-color); } /* 외화 부분 색상 */
         .currency-box small { font-size: 12px; color: var(--sub-text-color); display: block; }
 
         .money-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 20px; }
@@ -160,7 +177,7 @@
         .detail-box { margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #eee; display: none; }
         .detail-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* 저장된 카드 선택 라디오 스타일 */
+        /* 저장된 카드 선택 라디오 */
         .saved-card-list { margin-top: 5px; }
         .saved-card-item { display: flex; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; background: #fff; cursor: pointer; }
         .saved-card-item.active { border-color: var(--primary-color); background-color: #fff0e6; }
@@ -286,11 +303,11 @@
                 </div>
 
                 <div class="dual-currency">
-                    <div class="currency-box">
+                    <div class="currency-box active-input">
                         <small>KRW (원화)</small>
                         <input id="charge-krw-input" type="number" inputmode="numeric" placeholder="10,000 이상" oninput="calculateFromKrw(this.value)">
                     </div>
-                    <div style="color:#ddd; font-size: 20px;">|</div>
+                    <div class="swap-arrow"><i class="fas fa-exchange-alt"></i></div>
                     <div class="currency-box">
                         <small id="local-currency-label">USD (현지 통화)</small>
                         <input id="charge-local-input" type="text" placeholder="0.00" readonly>
@@ -600,7 +617,6 @@
         if (selectedMethod === 'card') {
             const cardSelection = document.querySelector('input[name="card_select"]:checked').value;
             if (cardSelection === 'new') {
-                // 입력폼 간단 체크 (실제론 더 복잡하지만 프로토타입용)
                 const inputs = document.querySelectorAll('#new-card-form input');
                 for(let input of inputs) {
                     if(!input.value) {
