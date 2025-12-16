@@ -127,34 +127,27 @@
         .currency-choice { padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-weight: 700; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; transition: all 0.2s; }
         .currency-choice.active { border-color: var(--primary-color); background-color: var(--button-bg-soft); color: var(--primary-color); box-shadow: 0 2px 8px rgba(243, 115, 33, 0.15); }
         
-        /* [복원] 듀얼 커런시 디자인 */
         .dual-currency { 
             display: flex; align-items: center; gap: 10px; padding: 12px; 
             border-radius: 12px; background: #F8F9FA; margin-bottom: 15px; border: 1px solid #EEEEEE; 
         }
         .currency-box { 
             flex: 1; padding: 10px; border-radius: 10px; 
-            transition: all 0.2s; border: 1px solid transparent; /* 기본 테두리 투명 */
+            transition: all 0.2s; border: 1px solid transparent; 
         }
-        /* KRW 입력칸 강조 (원래 스타일 복원) */
         .currency-box.active-input {
             background-color: #fff;
             border-color: var(--primary-color);
             box-shadow: 0 2px 8px rgba(243, 115, 33, 0.1);
         }
-
         .swap-arrow { color: var(--primary-color); font-size: 18px; padding: 0 5px; }
 
-        /* 입력 필드 스타일 */
         .currency-box input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; outline: none; text-align: right; margin-top: 5px; color: var(--text-color); }
-        
-        /* 숫자 키패드용 */
         .currency-box input[type="number"] { -moz-appearance: textfield; }
         .currency-box input[type="number"]::-webkit-outer-spin-button, 
         .currency-box input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        
         .currency-box input::placeholder { color: #ccc; font-weight: 400; font-size: 18px; }
-        .currency-box input[readonly] { color: var(--primary-color); } /* 외화 부분 색상 */
+        .currency-box input[readonly] { color: var(--primary-color); } 
         .currency-box small { font-size: 12px; color: var(--sub-text-color); display: block; }
 
         .money-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 20px; }
@@ -165,7 +158,6 @@
         .btn-reset { flex: 1; background: #fff; border: 1px solid #ddd; color: #666; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
         .btn-next { flex: 2; background: var(--primary-color); border: none; color: white; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-        /* Payment Section */
         .payment-section { margin-top: 20px; }
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; display: block; }
         .payment-option { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 15px;}
@@ -177,13 +169,38 @@
         .detail-box { margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #eee; display: none; }
         .detail-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* 저장된 카드 선택 라디오 */
         .saved-card-list { margin-top: 5px; }
         .saved-card-item { display: flex; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; background: #fff; cursor: pointer; }
         .saved-card-item.active { border-color: var(--primary-color); background-color: #fff0e6; }
         .saved-card-item input { margin-right: 10px; accent-color: var(--primary-color); }
         .saved-card-info { font-size: 14px; font-weight: 600; color: #333; }
         .saved-card-sub { font-size: 12px; color: #888; }
+
+        /* --- [NEW] 송금하기 페이지 스타일 --- */
+        .transfer-search {
+            width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid #eee; background: #f5f5f5; 
+            font-size: 14px; margin-bottom: 25px; outline: none;
+        }
+        .transfer-search:focus { border-color: var(--primary-color); background: #fff; }
+        
+        .recipient-list { list-style: none; padding: 0; margin: 0; }
+        .recipient-item { 
+            display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s;
+        }
+        .recipient-item:active { background-color: #f9f9f9; }
+        .recipient-avatar { 
+            width: 48px; height: 48px; border-radius: 50%; background-color: #eee; margin-right: 15px; 
+            display: flex; align-items: center; justify-content: center; font-weight: 700; color: #555; font-size: 18px;
+            position: relative;
+        }
+        /* Nexus 뱃지 */
+        .badge-nexus {
+            position: absolute; bottom: -2px; right: -2px; background: var(--primary-color); color: white;
+            font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
+        }
+        .recipient-info { flex: 1; }
+        .recipient-name { font-size: 16px; font-weight: 700; color: var(--text-color); margin-bottom: 4px; }
+        .recipient-detail { font-size: 13px; color: var(--sub-text-color); }
 
         /* Bottom Floating Bar */
         .bottom-floating-bar {
@@ -357,7 +374,6 @@
                     
                     <div id="card-detail" class="detail-box">
                         <p style="font-size:13px; color:#666; margin-bottom:10px;">사용할 카드를 선택하세요</p>
-                        
                         <div class="saved-card-list">
                             <label class="saved-card-item" onclick="toggleCardMode('saved')">
                                 <input type="radio" name="card_select" value="9334" checked>
@@ -380,7 +396,6 @@
                                 </div>
                             </label>
                         </div>
-
                         <div id="new-card-form" style="margin-top:15px; border-top:1px dashed #ddd; padding-top:15px; display:none;">
                             <div class="input-group">
                                 <label>카드 번호</label>
@@ -406,14 +421,78 @@
 
     <section class="page" id="page-transfer">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        
         <div class="form-card">
-            <h2 style="margin-top:0;">송금 (연결계좌)</h2>
-            <p style="color:var(--sub-text-color); margin-top:4px;">연결된 국내 계좌로 즉시 이체합니다.</p>
-            <div class="input-group">
-                <label for="transfer-amount">이체 금액 (₩)</label>
-                <input type="number" id="transfer-amount" min="0" inputmode="numeric" placeholder="예: 30000">
+            <h2 style="margin-top:0; margin-bottom:20px;">송금하기</h2>
+            
+            <div id="transfer-step-1">
+                <input type="text" class="transfer-search" placeholder="계좌번호나 이름 입력">
+                
+                <h3 style="font-size:15px; margin-bottom:15px; color:#555;">최근 보낸 분</h3>
+                
+                <ul class="recipient-list">
+                    <li class="recipient-item" onclick="selectRecipient('Ryan', 'Nexus Friend')">
+                        <div class="recipient-avatar">R <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Ryan</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Bailey', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#e3f2fd; color:#1565c0;">B <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Bailey</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Michael', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#f3e5f5; color:#7b1fa2;">M <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Michael</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Leah', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#e8f5e9; color:#2e7d32;">L <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Leah</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    
+                    <li class="recipient-item" onclick="selectRecipient('홍길동', '하나은행 715-***')">
+                        <div class="recipient-avatar" style="background:#009490; color:white;">홍</div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">홍길동</div>
+                            <div class="recipient-detail">하나은행 71500000000000</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                </ul>
             </div>
-            <button class="btn primary" onclick="submitTransfer()"><i class="fas fa-paper-plane"></i> 송금하기</button>
+
+            <div id="transfer-step-2" class="hidden">
+                <div style="background:#f9f9f9; padding:15px; border-radius:12px; margin-bottom:20px; text-align:center;">
+                    <div style="font-size:14px; color:#888;">받는 분</div>
+                    <div id="selected-recipient-name" style="font-size:18px; font-weight:700; color:#333; margin-top:5px;"></div>
+                    <div id="selected-recipient-info" style="font-size:13px; color:#666;"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>얼마를 보낼까요?</label>
+                    <input type="number" id="transfer-amount" min="0" inputmode="numeric" placeholder="예: 30000">
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn" style="flex:1; background:#eee; color:#333;" onclick="resetTransfer()">취소</button>
+                    <button class="btn primary" style="flex:2;" onclick="submitTransfer()">보내기</button>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -483,8 +562,11 @@
         if (activeNav) activeNav.classList.add('active');
         else if (targetId === 'page-home') document.querySelector('.nav-item[data-target="page-home"]').classList.add('active');
 
+        // 페이지별 초기화
         if (targetId === 'page-charge') {
             resetCharge();
+        } else if (targetId === 'page-transfer') {
+            resetTransfer(); // 송금 페이지 초기화
         } else {
             document.getElementById('charge-bottom-bar').classList.add('hidden');
         }
@@ -503,13 +585,42 @@
     }
 
     // ==========================================
-    // 충전하기 로직 (요청 반영)
+    // 송금하기 로직 (New)
+    // ==========================================
+    function selectRecipient(name, info) {
+        // UI 업데이트
+        document.getElementById('selected-recipient-name').innerText = name;
+        document.getElementById('selected-recipient-info').innerText = info;
+        
+        // 화면 전환 (리스트 숨기고 입력창 표시)
+        document.getElementById('transfer-step-1').classList.add('hidden');
+        document.getElementById('transfer-step-2').classList.remove('hidden');
+    }
+
+    function resetTransfer() {
+        document.getElementById('transfer-amount').value = '';
+        document.getElementById('transfer-step-1').classList.remove('hidden');
+        document.getElementById('transfer-step-2').classList.add('hidden');
+    }
+
+    function submitTransfer() {
+        const val = document.getElementById('transfer-amount').value;
+        const name = document.getElementById('selected-recipient-name').innerText;
+        
+        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        
+        showToast(`${name}님에게 송금이 완료되었습니다.`);
+        resetTransfer();
+        setTimeout(() => navigate('page-home'), 1000);
+    }
+
+    // ==========================================
+    // 충전하기 로직 (기존 유지)
     // ==========================================
     let chargeAmount = 0;
     let selectedCurrency = 'USD';
     let selectedMethod = null;
 
-    // 통화 변경
     function setCurrency(code, el) {
         if(document.getElementById('step1-area').classList.contains('disabled-area')) return;
 
@@ -518,135 +629,81 @@
         el.classList.add('active');
         
         document.getElementById('local-currency-label').innerText = `${code} (현지 통화)`;
-        // 현재 입력된 값 기준으로 재계산
         calculateFromKrw(document.getElementById('charge-krw-input').value);
     }
 
-    // 금액 추가 버튼 (+1만 등)
     function addMoney(val) {
         if(document.getElementById('step1-area').classList.contains('disabled-area')) return;
-        
-        // 현재 인풋 값 가져오기 (비어있으면 0)
         let currentVal = parseInt(document.getElementById('charge-krw-input').value) || 0;
         let newVal = currentVal + val;
-        
         document.getElementById('charge-krw-input').value = newVal;
         calculateFromKrw(newVal);
     }
 
-    // [핵심] KRW 입력 시 자동 환산 및 UI 업데이트
     function calculateFromKrw(val) {
-        // 숫자가 아니면 0 처리
         chargeAmount = parseInt(val) || 0;
-
-        // 외화 계산 (소수점 2자리)
         const rate = exchangeRates[selectedCurrency] || 1300;
         const localVal = chargeAmount / rate;
-        
         document.getElementById('charge-local-input').value = localVal > 0 ? localVal.toFixed(2) : '';
         document.getElementById('bottom-charge-amount').innerText = chargeAmount.toLocaleString();
     }
 
-    // 초기화
     function resetCharge() {
         chargeAmount = 0;
         selectedMethod = null;
         document.getElementById('charge-krw-input').value = '';
         calculateFromKrw(0);
-
-        // UI 리셋
         document.getElementById('step1-area').classList.remove('disabled-area');
         document.getElementById('charge-action-row').style.display = 'flex';
         document.getElementById('step2-area').classList.add('hidden');
         document.getElementById('charge-bottom-bar').classList.add('hidden');
-
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         document.querySelectorAll('.detail-box').forEach(box => box.classList.remove('show'));
     }
 
-    // [핵심] 다음 단계 (최소 금액 1만원 제한)
     function goNextStep() {
         if (chargeAmount < 10000) {
             alert('최소 10,000원 이상 충전 가능합니다.');
             return;
         }
-
         document.getElementById('step1-area').classList.add('disabled-area');
         document.getElementById('charge-action-row').style.display = 'none';
-        
         document.getElementById('step2-area').classList.remove('hidden');
         document.getElementById('charge-bottom-bar').classList.remove('hidden');
     }
 
-    // 결제 수단 선택
     function selectMethod(el, methodKey) {
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         document.querySelectorAll('.detail-box').forEach(box => box.classList.remove('show'));
-
         el.classList.add('selected');
         selectedMethod = methodKey;
-
-        if (methodKey === 'cash') {
-            document.getElementById('barcode-detail').classList.add('show');
-        } else if (methodKey === 'card') {
+        if (methodKey === 'cash') document.getElementById('barcode-detail').classList.add('show');
+        else if (methodKey === 'card') {
             document.getElementById('card-detail').classList.add('show');
-            // 카드 모드 초기화 (저장된 카드 1번으로)
             document.querySelector('input[name="card_select"][value="9334"]').checked = true;
             toggleCardMode('saved');
         }
     }
 
-    // [핵심] 카드 모드 전환 (저장된 카드 vs 새 카드)
     function toggleCardMode(mode) {
         const newCardForm = document.getElementById('new-card-form');
-        if (mode === 'new') {
-            newCardForm.style.display = 'block';
-        } else {
-            newCardForm.style.display = 'none';
-        }
+        newCardForm.style.display = (mode === 'new') ? 'block' : 'none';
     }
 
-    // 최종 충전
     function finalCharge() {
-        if (!selectedMethod) {
-            showToast('결제 수단을 선택해주세요.');
-            return;
-        }
-        
-        // 카드 선택 시 검증 로직 (새 카드일 경우)
+        if (!selectedMethod) return showToast('결제 수단을 선택해주세요.');
         if (selectedMethod === 'card') {
             const cardSelection = document.querySelector('input[name="card_select"]:checked').value;
             if (cardSelection === 'new') {
                 const inputs = document.querySelectorAll('#new-card-form input');
-                for(let input of inputs) {
-                    if(!input.value) {
-                        alert('카드 정보를 모두 입력해주세요.');
-                        return;
-                    }
-                }
+                for(let input of inputs) if(!input.value) return alert('카드 정보를 모두 입력해주세요.');
             }
         }
-        
         showToast(`${chargeAmount.toLocaleString()}원 충전 완료!`);
-        
         const rate = exchangeRates[selectedCurrency] || 1300;
         state.totalAssetsUSD += (chargeAmount / rate);
         document.getElementById('total-assets').innerText = `$${state.totalAssetsUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-
-        setTimeout(() => {
-            navigate('page-home');
-        }, 1200);
-    }
-
-    // ==========================================
-    // 기타 페이지 기능
-    // ==========================================
-    function submitTransfer() {
-        const val = document.getElementById('transfer-amount').value;
-        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
-        showToast('송금이 완료되었습니다.');
-        document.getElementById('transfer-amount').value = '';
-        navigate('page-home');
+        setTimeout(() => navigate('page-home'), 1200);
     }
 
     function submitRemit() {
