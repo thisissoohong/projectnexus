@@ -18,8 +18,6 @@
             --card-gradient: linear-gradient(135deg, #FF9966, #FF5E62); 
             --tab-color-active: #F37321;
             --button-bg-soft: #FFF0E6;
-            --income-color: #F37321; /* 한화 오렌지로 입금 강조 */
-            --expense-color: #222222;
         }
 
         * { box-sizing: border-box; }
@@ -123,33 +121,6 @@
         .form-card { padding: 20px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
-
-        /* --- [NEW] 내역(History) 스타일 --- */
-        .history-month-header {
-            font-size: 13px; color: var(--sub-text-color); margin-bottom: 15px; margin-top: 10px; font-weight: 600;
-        }
-        .transaction-list {
-            list-style: none; padding: 0; margin: 0;
-        }
-        .transaction-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 0; border-bottom: 1px solid #f5f5f5;
-        }
-        .t-left { display: flex; align-items: center; gap: 15px; }
-        .t-avatar {
-            width: 42px; height: 42px; border-radius: 50%;
-            background-color: #f0f0f0; background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: #555;
-        }
-        .t-info { display: flex; flex-direction: column; gap: 4px; }
-        .t-title { font-size: 16px; font-weight: 700; color: var(--text-color); }
-        .t-date { font-size: 12px; color: var(--sub-text-color); }
-        
-        .t-right { text-align: right; display: flex; flex-direction: column; gap: 4px; }
-        .t-amount { font-size: 16px; font-weight: 700; color: var(--expense-color); }
-        .t-amount.income { color: var(--income-color); } /* 한화 오렌지 */
-        .t-status { font-size: 11px; color: var(--sub-text-color); font-weight: 500; }
 
         /* --- 충전하기 스타일 --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
@@ -352,11 +323,11 @@
         <div class="quick-actions-grid">
             <h3 style="font-size:17px; margin-bottom:15px;">자주 쓰는 기능</h3>
             <div class="grid-4">
-                <div class="action-card primary" data-target="page-history">
+                <div class="action-card primary" onclick="showToast('소비 내역 확인')">
                     <div><i class="fas fa-receipt" style="font-size:24px;"></i></div>
                     <div style="font-size:14px; font-weight:600;">소비 내역</div>
                 </div>
-                <div class="action-card secondary" data-target="page-cards">
+                <div class="action-card secondary" onclick="showToast('교통카드 관리')">
                     <div><i class="fas fa-bus" style="font-size:24px;"></i></div>
                     <div style="font-size:14px; font-weight:600;">교통카드</div>
                 </div>
@@ -368,152 +339,6 @@
                     <div><i class="fas fa-passport" style="font-size:24px;"></i></div>
                     <div style="font-size:14px; font-weight:600;">비자 관리</div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="page" id="page-history">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
-        
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="margin:10px 0 20px;">이용 내역</h2>
-            <span style="font-size:14px; color:var(--primary-color); font-weight:600;">전체 보기</span>
-        </div>
-
-        <div class="history-month-header">6월 (JUNE)</div>
-
-        <ul class="transaction-list">
-            <li class="transaction-item">
-                <div class="t-left">
-                    <div class="t-avatar" style="background-image:url('https://randomuser.me/api/portraits/men/32.jpg')"></div>
-                    <div class="t-info">
-                        <span class="t-title">Mathias Bee</span>
-                        <span class="t-date">29 Jul, 5:00pm</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="t-amount income">+ $400.00</span>
-                    <span class="t-status">Received</span>
-                </div>
-            </li>
-            <li class="transaction-item">
-                <div class="t-left">
-                    <div class="t-avatar" style="background-color:#000; color:#fff;"><i class="fab fa-uber"></i></div>
-                    <div class="t-info">
-                        <span class="t-title">Uber Ride</span>
-                        <span class="t-date">24 Jul, 10:50pm</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="t-amount">- $20.00</span>
-                    <span class="t-status">Sent</span>
-                </div>
-            </li>
-            <li class="transaction-item">
-                <div class="t-left">
-                    <div class="t-avatar" style="background-color:#FCE4EC; color:#C2185B;">JD</div>
-                    <div class="t-info">
-                        <span class="t-title">John Doe</span>
-                        <span class="t-date">30 Jun, 5:00am</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="t-amount income">+ $3,420.00</span>
-                    <span class="t-status">Received</span>
-                </div>
-            </li>
-            <li class="transaction-item">
-                <div class="t-left">
-                    <div class="t-avatar" style="background-color:#fff; border:1px solid #eee; color:#333;"><i class="fab fa-amazon"></i></div>
-                    <div class="t-info">
-                        <span class="t-title">Amazon</span>
-                        <span class="t-date">26 Jun, 10:30am</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="t-amount">- $320.99</span>
-                    <span class="t-status">Sent</span>
-                </div>
-            </li>
-            <li class="transaction-item">
-                <div class="t-left">
-                    <div class="t-avatar" style="background-image:url('https://randomuser.me/api/portraits/women/44.jpg')"></div>
-                    <div class="t-info">
-                        <span class="t-title">Ayomide OA</span>
-                        <span class="t-date">30 Jun, 8:20pm</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="t-amount">- $23.50</span>
-                    <span class="t-status">Sent</span>
-                </div>
-            </li>
-        </ul>
-    </section>
-
-    <section class="page" id="page-cards">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
-        <h2 style="margin-top:0;">내 카드 관리</h2>
-        
-        <div class="gradient-card" style="height:180px; margin-bottom:20px;">
-            <div>
-                <div class="label" style="opacity:0.8;">Hanwha Travel Card</div>
-                <div class="card-chip"></div>
-            </div>
-            <div>
-                 <div class="card-number" style="font-size:16px;">0023 1234 5678 9000</div>
-                 <div class="card-brand" style="bottom:15px; right:15px;">
-                    <div class="brand-circle red"></div>
-                    <div class="brand-circle yellow"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>카드 별칭</label>
-            <input type="text" value="메인 여행 카드">
-        </div>
-        
-        <div style="margin-top:20px;">
-            <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <span>해외 결제 차단</span>
-                <i class="fas fa-toggle-off" style="font-size:24px; color:#ccc;"></i>
-            </div>
-            <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <span>카드 분실 신고</span>
-                <i class="fas fa-chevron-right" style="color:#ccc;"></i>
-            </div>
-            <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <span>비밀번호 변경</span>
-                <i class="fas fa-chevron-right" style="color:#ccc;"></i>
-            </div>
-        </div>
-    </section>
-
-    <section class="page" id="page-all">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
-        <h2 style="margin-top:0;">전체 메뉴</h2>
-        
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; text-align:center; margin-top:30px;">
-            <div style="padding:15px; background:#f9f9f9; border-radius:12px;">
-                <i class="fas fa-user-cog" style="font-size:24px; color:#555; margin-bottom:8px;"></i>
-                <div style="font-size:12px;">내 정보</div>
-            </div>
-            <div style="padding:15px; background:#f9f9f9; border-radius:12px;">
-                <i class="fas fa-shield-alt" style="font-size:24px; color:#555; margin-bottom:8px;"></i>
-                <div style="font-size:12px;">보안/인증</div>
-            </div>
-            <div style="padding:15px; background:#f9f9f9; border-radius:12px;">
-                <i class="fas fa-bullhorn" style="font-size:24px; color:#555; margin-bottom:8px;"></i>
-                <div style="font-size:12px;">공지사항</div>
-            </div>
-            <div style="padding:15px; background:#f9f9f9; border-radius:12px;">
-                <i class="fas fa-headset" style="font-size:24px; color:#555; margin-bottom:8px;"></i>
-                <div style="font-size:12px;">고객센터</div>
-            </div>
-            <div style="padding:15px; background:#f9f9f9; border-radius:12px;">
-                <i class="fas fa-cog" style="font-size:24px; color:#555; margin-bottom:8px;"></i>
-                <div style="font-size:12px;">설정</div>
             </div>
         </div>
     </section>
@@ -786,13 +611,11 @@
         </div>
     </section>
 
-</div> 
-
-<div class="bottom-nav">
+</div> <div class="bottom-nav">
     <div class="nav-item active" data-target="page-home"><i class="fas fa-home"></i> 홈</div>
-    <div class="nav-item" data-target="page-history"><i class="fas fa-list-alt"></i> 내역</div>
-    <div class="nav-item" data-target="page-cards"><i class="fas fa-credit-card"></i> 카드</div>
-    <div class="nav-item" data-target="page-all"><i class="fas fa-bars"></i> 전체</div>
+    <div class="nav-item" onclick="showToast('이용 내역 확인')"><i class="fas fa-list-alt"></i> 내역</div>
+    <div class="nav-item" onclick="showToast('카드 관리 메뉴')"><i class="fas fa-credit-card"></i> 카드</div>
+    <div class="nav-item" onclick="showToast('전체 메뉴')"><i class="fas fa-bars"></i> 전체</div>
 </div>
 
 <div id="charge-bottom-bar" class="bottom-floating-bar hidden" onclick="finalCharge()">
@@ -807,6 +630,10 @@
     // ==========================================
     const state = {
         totalAssetsKRW: 5000000, 
+        timeline: [
+            { icon: 'fa-wallet', title: '선불계좌 충전', desc: '간편 충전 성공', amount: '+₩200,000' },
+            { icon: 'fa-plane', title: '항공권 결제', desc: 'Korea → USA', amount: '-₩650,000' },
+        ],
     };
     
     const exchangeRates = { 
@@ -816,12 +643,14 @@
         JPY: 900 
     };
 
+    // 임시 거래 데이터 (비밀번호 입력 중 유지)
     let transactionContext = {
-        type: '', 
+        type: '', // 'transfer' or 'charge'
         amount: 0,
         recipient: '',
     };
     
+    // PIN 입력 상태
     let currentPin = "";
 
     function renderBalance() {
@@ -832,32 +661,35 @@
     // 네비게이션 로직
     // ==========================================
     function navigate(targetId) {
-        // 모든 페이지 숨김
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        
-        // 타겟 페이지 표시
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
         
-        // 하단 내비게이션 바 제어: 홈일 때만 보이고 나머지는 숨김 (요청사항 반영)
+        // --- [MODIFIED] 홈이 아닐 경우 하단 내비게이션 바 숨김 ---
         const bottomNav = document.querySelector('.bottom-nav');
         if (targetId === 'page-home') {
             bottomNav.classList.remove('hidden');
         } else {
             bottomNav.classList.add('hidden');
         }
+        // -----------------------------------------------------
 
-        // 탭 상태 업데이트
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (activeNav) activeNav.classList.add('active');
-        
+        else if (targetId === 'page-home') document.querySelector('.nav-item[data-target="page-home"]').classList.add('active');
+
         // 페이지별 초기화
         if (targetId === 'page-charge') resetCharge();
         if (targetId === 'page-transfer') resetTransfer();
         
-        // 플로팅바 숨김 (충전 페이지 포함 모든 페이지 진입 시 초기에는 숨김)
-        document.getElementById('charge-bottom-bar').classList.add('hidden');
+        // 플로팅바 제어
+        if (targetId === 'page-charge') {
+             // 충전 페이지 진입 시에는 step1이므로 플로팅 바 숨김
+             document.getElementById('charge-bottom-bar').classList.add('hidden');
+        } else {
+            document.getElementById('charge-bottom-bar').classList.add('hidden');
+        }
 
         window.scrollTo(0,0);
     }
@@ -866,7 +698,7 @@
         const t = document.getElementById('toast');
         t.innerText = msg;
         t.style.display = 'block';
-        setTimeout(() => t.style.opacity = 1, 10);
+        t.setTimeout(() => t.style.opacity = 1, 10);
         setTimeout(() => {
             t.style.opacity = 0;
             setTimeout(() => t.style.display = 'none', 300);
@@ -874,19 +706,22 @@
     }
 
     // ==========================================
-    // 비밀번호(PIN) 로직
+    // [NEW] 비밀번호(PIN) 로직
     // ==========================================
     function startPasswordFlow(type, amount, recipientName) {
         transactionContext = { type, amount, recipient: recipientName };
         currentPin = "";
         updatePinDisplay();
 
+        // 메시지 설정
         const msgEl = document.getElementById('pin-message-text');
         if (type === 'transfer') {
             msgEl.innerHTML = `${recipientName}님께<br>${amount.toLocaleString()}KRW를 송금합니다.`;
         } else {
             msgEl.innerHTML = `${amount.toLocaleString()}KRW를<br>충전합니다.`;
         }
+
+        // 페이지 이동 (단순 display 전환)
         navigate('page-password');
     }
 
@@ -896,6 +731,7 @@
             updatePinDisplay();
             
             if (currentPin.length === 6) {
+                // 약간의 딜레이 후 성공 처리
                 setTimeout(checkPin, 200);
             }
         }
@@ -917,15 +753,17 @@
     }
 
     function checkPin() {
+        // 실제 앱에선 서버 검증 하겠지만 여기선 무조건 성공
         showSuccessPage();
     }
 
     function cancelPassword() {
+        // 취소 시 홈으로 혹은 이전 페이지로 (여기선 홈으로)
         navigate('page-home');
     }
 
     // ==========================================
-    // 완료(Success) 로직
+    // [NEW] 완료(Success) 로직
     // ==========================================
     function showSuccessPage() {
         const { type, amount, recipient } = transactionContext;
@@ -935,10 +773,12 @@
         if (type === 'transfer') {
             titleEl.innerText = "송금 완료!";
             descEl.innerText = `${recipient}님께 ${amount.toLocaleString()}원 송금됨`;
+            // 잔액 차감
             state.totalAssetsKRW -= amount;
         } else {
             titleEl.innerText = "충전 완료!";
             descEl.innerText = `${amount.toLocaleString()}원 충전 완료`;
+            // 잔액 추가
             state.totalAssetsKRW += amount;
         }
         renderBalance();
@@ -950,6 +790,7 @@
         let msg = "";
         if (type === 'transfer') msg = `${recipient}님에게 ${amount.toLocaleString()}원 송금 완료!`;
         else msg = `${amount.toLocaleString()}원 충전 완료!`;
+        
         alert(`[공유 메시지 전송]\n${msg}`);
     }
 
@@ -981,6 +822,7 @@
         if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
         if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
         
+        // [변경] 바로 완료하지 않고 비밀번호 페이지로 이동
         startPasswordFlow('transfer', val, name);
     }
 
@@ -1067,6 +909,8 @@
                 for(let input of inputs) if(!input.value) return alert('카드 정보를 모두 입력해주세요.');
             }
         }
+        
+        // [변경] 바로 완료하지 않고 비밀번호 페이지로 이동
         startPasswordFlow('charge', chargeAmount, '내 지갑');
     }
 
