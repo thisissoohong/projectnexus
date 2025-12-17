@@ -143,10 +143,11 @@
         }
         .t-left { display: flex; align-items: center; gap: 15px; }
         
+        /* 송금 프로필 스타일 그대로 사용 */
         .t-avatar { 
             width: 48px; height: 48px; border-radius: 50%; background-color: #eee;
             display: flex; align-items: center; justify-content: center; font-weight: 700; color: #555; font-size: 18px;
-            position: relative; background-size: cover; background-position: center; flex-shrink: 0;
+            position: relative; background-size: cover; background-position: center;
         }
         .t-info { display: flex; flex-direction: column; gap: 4px; }
         .t-title { font-size: 16px; font-weight: 700; color: var(--text-color); }
@@ -157,6 +158,7 @@
         .t-amount.income { color: var(--income-color); } /* 한화 오렌지 */
         .t-status { font-size: 11px; color: var(--sub-text-color); font-weight: 500; }
 
+        /* 배지 스타일 (송금 탭과 동일) */
         .badge-nexus {
             position: absolute; bottom: -2px; right: -2px; background: var(--primary-color); color: white;
             font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
@@ -389,10 +391,77 @@
 
         <input type="text" class="history-search" placeholder="이름 또는 가맹점 검색" onkeyup="filterTransactions(this.value)">
 
-        <div class="history-month-header">최근 (RECENT)</div>
+        <div class="history-month-header">6월 (JUNE)</div>
 
         <ul class="transaction-list" id="history-list">
-            </ul>
+            <li class="transaction-item">
+                <div class="t-left">
+                    <div class="t-avatar" style="background-image:url('https://randomuser.me/api/portraits/men/32.jpg')">
+                        <span class="badge-nexus">N</span>
+                    </div>
+                    <div class="t-info">
+                        <span class="t-title">Mathias Bee</span>
+                        <span class="t-date">29 Jul, 5:00pm</span>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <span class="t-amount income">+ ₩520,000</span>
+                    <span class="t-status">Received</span>
+                </div>
+            </li>
+            <li class="transaction-item">
+                <div class="t-left">
+                    <div class="t-avatar" style="background-color:#000; color:#fff;"><i class="fab fa-uber"></i></div>
+                    <div class="t-info">
+                        <span class="t-title">Uber Ride</span>
+                        <span class="t-date">24 Jul, 10:50pm</span>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <span class="t-amount">- ₩26,000</span>
+                    <span class="t-status">Paid</span>
+                </div>
+            </li>
+            <li class="transaction-item">
+                <div class="t-left">
+                    <div class="t-avatar" style="background-color:#FCE4EC; color:#C2185B;">JD <span class="badge-nexus">N</span></div>
+                    <div class="t-info">
+                        <span class="t-title">John Doe</span>
+                        <span class="t-date">30 Jun, 5:00am</span>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <span class="t-amount income">+ ₩4,500,000</span>
+                    <span class="t-status">Received</span>
+                </div>
+            </li>
+            <li class="transaction-item">
+                <div class="t-left">
+                    <div class="t-avatar" style="background-color:#fff; border:1px solid #eee; color:#333;"><i class="fab fa-amazon"></i></div>
+                    <div class="t-info">
+                        <span class="t-title">Amazon</span>
+                        <span class="t-date">26 Jun, 10:30am</span>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <span class="t-amount">- ₩420,000</span>
+                    <span class="t-status">Paid</span>
+                </div>
+            </li>
+            <li class="transaction-item">
+                <div class="t-left">
+                    <div class="t-avatar" style="background-image:url('https://randomuser.me/api/portraits/women/44.jpg')"></div>
+                    <div class="t-info">
+                        <span class="t-title">Ayomide OA</span>
+                        <span class="t-date">30 Jun, 8:20pm</span>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <span class="t-amount">- ₩30,500</span>
+                    <span class="t-status">Sent</span>
+                </div>
+            </li>
+        </ul>
     </section>
 
     <section class="page" id="page-cards">
@@ -750,15 +819,7 @@
     // 앱 데이터 및 상태 관리
     // ==========================================
     const state = {
-        totalAssetsKRW: 5000000,
-        // 초기 거래 내역 데이터
-        transactions: [
-            { id: 1, type: 'income', title: 'Mathias Bee', date: '29 Jul, 5:00pm', amount: 520000, status: 'Received', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
-            { id: 2, type: 'expense', title: 'Uber Ride', date: '24 Jul, 10:50pm', amount: 26000, status: 'Paid', avatarIcon: 'fab fa-uber', avatarBg: '#000', avatarColor: '#fff' },
-            { id: 3, type: 'income', title: 'John Doe', date: '30 Jun, 5:00am', amount: 4500000, status: 'Received', avatarInitial: 'JD', avatarBg: '#FCE4EC', avatarColor: '#C2185B' },
-            { id: 4, type: 'expense', title: 'Amazon', date: '26 Jun, 10:30am', amount: 420000, status: 'Paid', avatarIcon: 'fab fa-amazon', avatarBg: '#fff', avatarColor: '#333' },
-            { id: 5, type: 'expense', title: 'Ayomide OA', date: '30 Jun, 8:20pm', amount: 30500, status: 'Sent', avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' }
-        ]
+        totalAssetsKRW: 5000000, 
     };
     
     const exchangeRates = { 
@@ -781,69 +842,17 @@
     }
 
     // ==========================================
-    // 내역 렌더링 (Dynamic)
-    // ==========================================
-    function renderHistory() {
-        const list = document.getElementById('history-list');
-        list.innerHTML = ''; // 초기화
-
-        state.transactions.forEach(t => {
-            const li = document.createElement('li');
-            li.className = 'transaction-item';
-            
-            // 아바타 처리 로직
-            let avatarHtml = '';
-            if (t.avatarUrl) {
-                avatarHtml = `<div class="t-avatar" style="background-image:url('${t.avatarUrl}')"><span class="badge-nexus">N</span></div>`;
-            } else if (t.avatarIcon) {
-                avatarHtml = `<div class="t-avatar" style="background-color:${t.avatarBg||'#eee'}; color:${t.avatarColor||'#333'}"><i class="${t.avatarIcon}"></i></div>`;
-            } else if (t.avatarInitial) {
-                avatarHtml = `<div class="t-avatar" style="background-color:${t.avatarBg||'#eee'}; color:${t.avatarColor||'#333'}">${t.avatarInitial} <span class="badge-nexus">N</span></div>`;
-            } else {
-                 avatarHtml = `<div class="t-avatar" style="background-color:#eee; color:#333"><i class="fas fa-coins"></i></div>`;
-            }
-
-            const isIncome = t.type === 'income';
-            const sign = isIncome ? '+' : '-';
-            const amountClass = isIncome ? 't-amount income' : 't-amount';
-
-            li.innerHTML = `
-                <div class="t-left">
-                    ${avatarHtml}
-                    <div class="t-info">
-                        <span class="t-title">${t.title}</span>
-                        <span class="t-date">${t.date}</span>
-                    </div>
-                </div>
-                <div class="t-right">
-                    <span class="${amountClass}">${sign} ₩${t.amount.toLocaleString()}</span>
-                    <span class="t-status">${t.status}</span>
-                </div>
-            `;
-            list.appendChild(li);
-        });
-    }
-
-    // 날짜 포맷 헬퍼
-    function getFormattedDate() {
-        const now = new Date();
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        let hour = now.getHours();
-        const ampm = hour >= 12 ? 'pm' : 'am';
-        hour = hour % 12;
-        hour = hour ? hour : 12;
-        const min = now.getMinutes().toString().padStart(2, '0');
-        return `${now.getDate()} ${months[now.getMonth()]}, ${hour}:${min}${ampm}`;
-    }
-
-    // ==========================================
     // 네비게이션 로직
     // ==========================================
     function navigate(targetId) {
+        // 모든 페이지 숨김
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        
+        // 타겟 페이지 표시
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
         
+        // 하단 내비게이션 바 제어: 홈일 때만 보이고 나머지는 숨김 (요청사항 반영)
         const bottomNav = document.querySelector('.bottom-nav');
         if (targetId === 'page-home') {
             bottomNav.classList.remove('hidden');
@@ -851,14 +860,18 @@
             bottomNav.classList.add('hidden');
         }
 
+        // 탭 상태 업데이트
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (activeNav) activeNav.classList.add('active');
         
+        // 페이지별 초기화
         if (targetId === 'page-charge') resetCharge();
         if (targetId === 'page-transfer') resetTransfer();
         
+        // 플로팅바 숨김 (충전 페이지 포함 모든 페이지 진입 시 초기에는 숨김)
         document.getElementById('charge-bottom-bar').classList.add('hidden');
+
         window.scrollTo(0,0);
     }
 
@@ -943,52 +956,23 @@
     }
 
     // ==========================================
-    // 완료(Success) 및 거래 추가 로직
+    // 완료(Success) 로직
     // ==========================================
     function showSuccessPage() {
         const { type, amount, recipient } = transactionContext;
         const titleEl = document.getElementById('success-title');
         const descEl = document.getElementById('success-desc');
 
-        // 새로운 거래 기록 생성
-        const newTx = {
-            id: Date.now(),
-            date: getFormattedDate(),
-            amount: amount,
-            title: recipient,
-        };
-
         if (type === 'transfer') {
             titleEl.innerText = "송금 완료!";
             descEl.innerText = `${recipient}님께 ${amount.toLocaleString()}원 송금됨`;
             state.totalAssetsKRW -= amount;
-            
-            // 송금 내역 추가
-            newTx.type = 'expense';
-            newTx.status = 'Sent';
-            // 이니셜 아바타 생성
-            newTx.avatarInitial = recipient.charAt(0).toUpperCase();
-            newTx.avatarBg = '#E0F7FA'; // 임의 색상
-            newTx.avatarColor = '#006064';
-
         } else {
             titleEl.innerText = "충전 완료!";
             descEl.innerText = `${amount.toLocaleString()}원 충전 완료`;
             state.totalAssetsKRW += amount;
-            
-            // 충전 내역 추가
-            newTx.type = 'income';
-            newTx.status = 'Received';
-            newTx.avatarIcon = 'fas fa-wallet';
-            newTx.avatarBg = '#FFF3E0';
-            newTx.avatarColor = '#E65100';
         }
-        
-        // 내역 배열 맨 앞에 추가
-        state.transactions.unshift(newTx);
-        renderHistory(); // 내역 리스트 다시 그리기
-        renderBalance(); // 잔액 업데이트
-        
+        renderBalance();
         navigate('page-success');
     }
 
@@ -1138,7 +1122,6 @@
         });
         resetCharge();
         renderBalance();
-        renderHistory(); // 초기 내역 렌더링
     });
 
 </script>
