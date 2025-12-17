@@ -190,7 +190,7 @@
         .big-money-input[type="number"] { -moz-appearance: textfield; }
         .big-money-input[type="number"]::-webkit-outer-spin-button, .big-money-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* --- [NEW] 이용 내역 (History) 스타일 --- */
+        /* --- 이용 내역 (History) 스타일 --- */
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .history-title { font-size: 20px; font-weight: 800; }
         .month-selector { font-size: 14px; font-weight: 600; color: #555; background: #eee; padding: 6px 12px; border-radius: 15px; cursor: pointer; }
@@ -207,11 +207,8 @@
         .trans-name { font-size: 16px; font-weight: 700; color: #222; }
         .trans-date { font-size: 12px; color: #999; }
         .trans-amount { font-size: 16px; font-weight: 700; }
-        
-        /* 금액 색상 처리 */
-        .trans-amount.plus { color: var(--positive-color); } /* 수입: 초록 */
-        .trans-amount.minus { color: #222; } /* 지출: 검정 */
-
+        .trans-amount.plus { color: var(--positive-color); }
+        .trans-amount.minus { color: #222; }
 
         /* Bottom Floating Bar */
         .bottom-floating-bar {
@@ -261,11 +258,11 @@
         </div>
 
         <div class="action-tray">
-            <div class="action-btn-pill" data-target="page-transfer">
+            <div class="action-btn-pill" onclick="navigate('page-transfer')" data-target="page-transfer">
                 <div class="icon"><i class="fas fa-paper-plane"></i></div>
                 송금
             </div>
-            <div class="action-btn-pill" data-target="page-charge">
+            <div class="action-btn-pill" onclick="navigate('page-charge')" data-target="page-charge">
                 <div class="icon"><i class="fas fa-plus"></i></div>
                 충전
             </div>
@@ -273,7 +270,7 @@
                 <div class="icon"><i class="fas fa-hand-holding-usd"></i></div>
                 요청
             </div>
-            <div class="action-btn-pill" data-target="page-remit">
+            <div class="action-btn-pill" onclick="navigate('page-remit')" data-target="page-remit">
                 <div class="icon"><i class="fas fa-globe-asia"></i></div>
                 환전
             </div>
@@ -282,7 +279,8 @@
         <div class="quick-actions-grid">
             <h3 style="font-size:17px; margin-bottom:15px;">자주 쓰는 기능</h3>
             <div class="grid-4">
-                <div class="action-card primary" onclick="navigate('page-history')"> <div><i class="fas fa-receipt" style="font-size:24px;"></i></div>
+                <div class="action-card primary" onclick="navigate('page-history')">
+                    <div><i class="fas fa-receipt" style="font-size:24px;"></i></div>
                     <div style="font-size:14px; font-weight:600;">소비 내역</div>
                 </div>
                 <div class="action-card secondary" onclick="showToast('교통카드 관리')">
@@ -376,7 +374,7 @@
     </section>
 
     <section class="page" id="page-charge">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <a class="back-link" data-target="page-home" onclick="navigate('page-home')"><i class="fas fa-arrow-left"></i> 홈으로</a>
         
         <div class="form-card">
             <h2 style="margin-top:0;">충전하기</h2>
@@ -496,7 +494,7 @@
     </section>
 
     <section class="page" id="page-transfer">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <a class="back-link" data-target="page-home" onclick="navigate('page-home')"><i class="fas fa-arrow-left"></i> 홈으로</a>
         
         <div class="form-card">
             <h2 style="margin-top:0; margin-bottom:20px;">송금하기</h2>
@@ -571,7 +569,7 @@
     </section>
 
     <section class="page" id="page-remit">
-        <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        <a class="back-link" data-target="page-home" onclick="navigate('page-home')"><i class="fas fa-arrow-left"></i> 홈으로</a>
         <div class="form-card">
             <h2 style="margin-top:0;">환전 및 해외 송금</h2>
             <p style="color:var(--sub-text-color); margin-top:4px;">실시간 환율이 적용되며 수수료가 부과됩니다.</p>
@@ -592,10 +590,18 @@
     </section>
 
 </div> <div class="bottom-nav">
-    <div class="nav-item active" data-target="page-home"><i class="fas fa-home"></i> 홈</div>
-    <div class="nav-item" data-target="page-history"><i class="fas fa-list-alt"></i> 내역</div>
-    <div class="nav-item" onclick="showToast('카드 관리 메뉴')"><i class="fas fa-credit-card"></i> 카드</div>
-    <div class="nav-item" onclick="showToast('전체 메뉴')"><i class="fas fa-bars"></i> 전체</div>
+    <div class="nav-item active" onclick="navigate('page-home')" data-target="page-home">
+        <i class="fas fa-home"></i> 홈
+    </div>
+    <div class="nav-item" onclick="navigate('page-history')" data-target="page-history">
+        <i class="fas fa-list-alt"></i> 내역
+    </div>
+    <div class="nav-item" onclick="showToast('카드 관리 메뉴')" data-target="page-card">
+        <i class="fas fa-credit-card"></i> 카드
+    </div>
+    <div class="nav-item" onclick="showToast('전체 메뉴')" data-target="page-menu">
+        <i class="fas fa-bars"></i> 전체
+    </div>
 </div>
 
 <div id="charge-bottom-bar" class="bottom-floating-bar hidden" onclick="finalCharge()">
@@ -634,7 +640,7 @@
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
         
-        // 하단 탭 상태 활성화
+        // 하단 탭 상태 활성화 (시각적 처리)
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (activeNav) activeNav.classList.add('active');
@@ -643,7 +649,6 @@
         const mainTabs = ['page-home', 'page-history', 'page-card', 'page-menu'];
         const bottomNav = document.querySelector('.bottom-nav');
 
-        // 메인 탭에 속하면 보이고, 아니면(충전, 송금 등) 숨김
         if (mainTabs.includes(targetId)) {
             bottomNav.classList.remove('hidden');
             bottomNav.style.display = 'flex';
@@ -658,7 +663,6 @@
         } else if (targetId === 'page-transfer') {
             resetTransfer();
         } else {
-            // 다른 페이지 이동 시 충전바 숨김
             document.getElementById('charge-bottom-bar').classList.add('hidden');
         }
         window.scrollTo(0,0);
@@ -811,10 +815,12 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        // [수정] 아래의 data-target 루프는 보조적인 수단으로 남겨두거나 삭제해도 무방하지만 안전을 위해 둠.
         document.querySelectorAll('[data-target]').forEach(el => {
             el.addEventListener('click', (e) => {
-                const target = el.dataset.target;
-                navigate(target);
+                // 상위 요소로의 버블링에 의존하지 않고 직접 핸들링
+                // const target = el.dataset.target;
+                // navigate(target);
             });
         });
         resetCharge();
