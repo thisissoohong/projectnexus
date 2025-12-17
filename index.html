@@ -665,6 +665,15 @@
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
         
+        // --- [MODIFIED] 홈이 아닐 경우 하단 내비게이션 바 숨김 ---
+        const bottomNav = document.querySelector('.bottom-nav');
+        if (targetId === 'page-home') {
+            bottomNav.classList.remove('hidden');
+        } else {
+            bottomNav.classList.add('hidden');
+        }
+        // -----------------------------------------------------
+
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (activeNav) activeNav.classList.add('active');
@@ -689,7 +698,7 @@
         const t = document.getElementById('toast');
         t.innerText = msg;
         t.style.display = 'block';
-        setTimeout(() => t.style.opacity = 1, 10);
+        t.setTimeout(() => t.style.opacity = 1, 10);
         setTimeout(() => {
             t.style.opacity = 0;
             setTimeout(() => t.style.display = 'none', 300);
