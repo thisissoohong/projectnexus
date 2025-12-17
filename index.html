@@ -165,13 +165,21 @@
         .big-money-input-wrapper { background-color: #fff; border: 2px solid var(--primary-color); border-radius: 12px; padding: 15px; margin: 20px 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(243, 115, 33, 0.1); }
         .big-money-input { width: 100%; border: none; background: transparent; font-size: 32px; font-weight: 800; outline: none; text-align: center; color: var(--text-color); }
 
-        /* [NEW] Success Page Styles */
+        /* Success Page Styles */
         .success-container { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; }
         .success-icon { width: 80px; height: 80px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(243, 115, 33, 0.3); }
         .success-icon i { color: white; font-size: 40px; }
         .success-text { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
         .success-amount { font-size: 32px; font-weight: 800; color: var(--primary-color); margin-bottom: 30px; }
 
+        /* [NEW] Password Prompt Modal */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; display:none; align-items:center; justify-content:center; }
+        .modal-overlay.show { display: flex; }
+        .password-modal { background: white; width: 85%; max-width: 320px; padding: 25px; border-radius: 20px; text-align: center; animation: fadeIn 0.2s; }
+        .password-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .password-input { width: 100%; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 5px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; outline: none; }
+        .password-input:focus { border-color: var(--primary-color); }
+        
         /* Bottom Floating Bar */
         .bottom-floating-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: rgba(243, 115, 33, 0.95); padding: 20px; padding-bottom: 30px; border-radius: 20px 20px 0 0; text-align: center; color: white; font-size: 18px; font-weight: 700; cursor: pointer; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); max-width: 450px; margin: 0 auto; }
         .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 12px 18px; border-radius: 16px; font-size: 14px; display: none; z-index: 2000; opacity: 0; transition: opacity 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
@@ -250,7 +258,6 @@
             <h2>전체 메뉴</h2>
             <ul style="list-style:none; padding:0; margin-top:20px;">
                 <li style="padding:15px 0; border-bottom:1px solid #eee;">👤 내 정보</li>
-                <li style="padding:15px 0; border-bottom:1px solid #eee;">⚙️ 설정</li>
                 <li style="padding:15px 0; border-bottom:1px solid #eee;">📢 공지사항</li>
             </ul>
         </div>
@@ -352,7 +359,7 @@
                 <div class="big-money-input-wrapper"><input type="number" id="transfer-amount" class="big-money-input" placeholder="0" inputmode="numeric"></div>
                 <div style="display:flex; gap:10px; margin-top:20px;">
                     <button class="btn" style="flex:1; background:#eee; color:#333;" onclick="resetTransfer()">취소</button>
-                    <button class="btn primary" style="flex:2;" onclick="submitTransfer()">보내기</button>
+                    <button class="btn primary" style="flex:2;" onclick="trySubmitTransfer()">보내기</button>
                 </div>
             </div>
         </div>
@@ -368,6 +375,18 @@
         </div>
     </section>
 
+    <div class="modal-overlay" id="password-modal">
+        <div class="password-modal">
+            <div class="password-title">비밀번호 입력</div>
+            <div style="font-size:13px; color:#666; margin-bottom:20px;">안전한 거래를 위해<br>결제 비밀번호 6자리를 입력해주세요.</div>
+            <input type="password" id="modal-pin-input" class="password-input" maxlength="6" inputmode="numeric" placeholder="******">
+            <div style="display:flex; gap:10px;">
+                <button class="btn" style="background:#eee; color:#333; flex:1;" onclick="closePasswordModal()">취소</button>
+                <button class="btn primary" style="flex:1;" onclick="confirmPassword()">확인</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="bottom-nav">
@@ -377,7 +396,7 @@
     <div class="nav-item" id="nav-menu" onclick="navigate('page-menu')"><i class="fas fa-bars"></i> 전체</div>
 </div>
 
-<div id="charge-bottom-bar" class="bottom-floating-bar hidden" onclick="finalCharge()">
+<div id="charge-bottom-bar" class="bottom-floating-bar hidden" onclick="tryFinalCharge()">
     <span id="bottom-charge-amount">0</span>원 충전하기
 </div>
 
@@ -386,6 +405,37 @@
 <script>
     const state = { totalAssetsKRW: 5000000 };
     const exchangeRates = { USD: 1300, EUR: 1400, AUD: 850, JPY: 900 };
+    
+    // Password Logic
+    let pendingAction = null; // 'charge' or 'transfer'
+
+    function openPasswordModal(action) {
+        pendingAction = action;
+        document.getElementById('modal-pin-input').value = '';
+        document.getElementById('password-modal').classList.add('show');
+        document.getElementById('modal-pin-input').focus();
+    }
+
+    function closePasswordModal() {
+        document.getElementById('password-modal').classList.remove('show');
+        pendingAction = null;
+    }
+
+    function confirmPassword() {
+        const pin = document.getElementById('modal-pin-input').value;
+        if (pin.length < 4) { // 간단 체크
+            alert('비밀번호를 입력해주세요.');
+            return;
+        }
+        
+        closePasswordModal();
+        
+        if (pendingAction === 'charge') {
+            executeCharge();
+        } else if (pendingAction === 'transfer') {
+            executeTransfer();
+        }
+    }
 
     function renderBalance() {
         document.getElementById('total-assets').innerText = '₩' + state.totalAssetsKRW.toLocaleString();
@@ -393,12 +443,10 @@
 
     /* NAVIGATION LOGIC */
     function navigate(targetId) {
-        // 1. Pages
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
 
-        // 2. Tabs
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         let activeNavId = '';
         if (targetId === 'page-home') activeNavId = 'nav-home';
@@ -408,7 +456,6 @@
         
         if (activeNavId) document.getElementById(activeNavId).classList.add('active');
 
-        // 3. Toggle Bottom Nav
         const mainTabs = ['page-home', 'page-history', 'page-card', 'page-menu'];
         const bottomNav = document.querySelector('.bottom-nav');
         if (mainTabs.includes(targetId)) {
@@ -419,7 +466,6 @@
             bottomNav.style.display = 'none';
         }
 
-        // 4. Inits
         if (targetId === 'page-charge') resetCharge();
         else if (targetId === 'page-transfer') resetTransfer();
         else document.getElementById('charge-bottom-bar').classList.add('hidden');
@@ -447,11 +493,21 @@
         document.getElementById('transfer-step-1').classList.remove('hidden');
         document.getElementById('transfer-step-2').classList.add('hidden');
     }
-    function submitTransfer() {
+    
+    // [MODIFIED] Triggered by button
+    function trySubmitTransfer() {
         const val = parseInt(document.getElementById('transfer-amount').value) || 0;
-        const name = document.getElementById('selected-recipient-name').innerText;
         if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
         if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
+        
+        // Open Password Modal
+        openPasswordModal('transfer');
+    }
+
+    // Actual execution after password
+    function executeTransfer() {
+        const val = parseInt(document.getElementById('transfer-amount').value) || 0;
+        const name = document.getElementById('selected-recipient-name').innerText;
         state.totalAssetsKRW -= val; renderBalance();
         showToast(`${name}님에게 ${val.toLocaleString()}원 송금 완료`);
         resetTransfer(); setTimeout(() => navigate('page-home'), 1000);
@@ -512,18 +568,26 @@
     function toggleCardMode(mode) {
         document.getElementById('new-card-form').style.display = (mode === 'new') ? 'block' : 'none';
     }
-    function finalCharge() {
+    
+    // [MODIFIED] Triggered by bottom bar
+    function tryFinalCharge() {
         if (!selectedMethod) return showToast('결제 수단을 선택해주세요.');
         if (selectedMethod === 'card' && document.querySelector('input[name="card_select"]:checked').value === 'new') {
              const inputs = document.querySelectorAll('#new-card-form input');
              for(let input of inputs) if(!input.value) return alert('카드 정보를 모두 입력해주세요.');
         }
         
-        // Show Success Page
+        // Open Password Modal
+        openPasswordModal('charge');
+    }
+
+    // Actual execution after password
+    function executeCharge() {
         state.totalAssetsKRW += chargeAmount; renderBalance();
         document.getElementById('success-amount-display').innerText = chargeAmount.toLocaleString() + '원';
         navigate('page-success');
     }
+
     function submitRemit() {
         const val = parseInt(document.getElementById('remit-amount').value) || 0;
         if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
