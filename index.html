@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Boarding - Hanwha Style Finance App</title>
     <style>
         /* ====================================
@@ -30,6 +30,7 @@
             color: var(--text-color);
             min-height: 100vh;
             padding-bottom: 80px; /* 하단 탭 바 공간 확보 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* 앱 껍데기 */
@@ -115,51 +116,140 @@
         .nav-item i { font-size: 22px; margin-bottom: 4px; }
 
         /* ====================================
-           Page Styles (Forms & Charge)
+           Page Styles
            ==================================== */
         .form-card { padding: 20px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
 
-        /* --- 충전하기 전용 스타일 (수정됨) --- */
-        
-        /* 1. 통화 선택 및 입력창 */
+        /* --- 충전하기 스타일 --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .currency-choice { padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-weight: 700; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; transition: all 0.2s; }
         .currency-choice.active { border-color: var(--primary-color); background-color: var(--button-bg-soft); color: var(--primary-color); box-shadow: 0 2px 8px rgba(243, 115, 33, 0.15); }
         
-        .dual-currency { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #F8F9FA; margin-bottom: 15px; border: 1px solid #EEEEEE; }
-        .currency-box { flex: 1; padding: 8px; }
+        .dual-currency { 
+            display: flex; align-items: center; gap: 10px; padding: 12px; 
+            border-radius: 12px; background: #F8F9FA; margin-bottom: 15px; border: 1px solid #EEEEEE; 
+        }
+        .currency-box { 
+            flex: 1; padding: 10px; border-radius: 10px; 
+            transition: all 0.2s; border: 1px solid transparent; 
+        }
+        .currency-box.active-input {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(243, 115, 33, 0.1);
+        }
+        .swap-arrow { color: var(--primary-color); font-size: 18px; padding: 0 5px; }
+
         .currency-box input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; outline: none; text-align: right; margin-top: 5px; color: var(--text-color); }
+        .currency-box input[type="number"] { -moz-appearance: textfield; }
+        .currency-box input[type="number"]::-webkit-outer-spin-button, 
+        .currency-box input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .currency-box input::placeholder { color: #ccc; font-weight: 400; font-size: 18px; }
+        .currency-box input[readonly] { color: var(--primary-color); } 
         .currency-box small { font-size: 12px; color: var(--sub-text-color); display: block; }
 
-        /* 2. 금액 버튼 그리드 (새로 추가) */
         .money-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 20px; }
         .money-btn { width: 31%; padding: 12px 0; background-color: #f5f5f5; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; transition: background 0.2s; }
         .money-btn:active { background-color: #e0e0e0; }
 
-        /* 3. 초기화 | 다음 버튼 Row (새로 추가) */
         .action-row { display: flex; gap: 10px; margin-top: 10px; }
         .btn-reset { flex: 1; background: #fff; border: 1px solid #ddd; color: #666; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
         .btn-next { flex: 2; background: var(--primary-color); border: none; color: white; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-        /* 4. 결제 수단 및 상세 폼 */
         .payment-section { margin-top: 20px; }
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; display: block; }
         .payment-option { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 15px;}
-        .payment-option.selected { background-color: #fffaf5; } /* 선택 시 배경색 */
+        .payment-option.selected { background-color: #fffaf5; }
         .payment-option.selected .radio-circle { border-color: var(--primary-color); }
         .payment-option.selected .radio-circle::after { content: ''; width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; }
         .radio-circle { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; }
         
-        /* 바코드 및 카드 폼 박스 */
         .detail-box { margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #eee; display: none; }
         .detail-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* 하단 플로팅 바 (주황색 투명) */
+        .saved-card-list { margin-top: 5px; }
+        .saved-card-item { display: flex; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; background: #fff; cursor: pointer; }
+        .saved-card-item.active { border-color: var(--primary-color); background-color: #fff0e6; }
+        .saved-card-item input { margin-right: 10px; accent-color: var(--primary-color); }
+        .saved-card-info { font-size: 14px; font-weight: 600; color: #333; }
+        .saved-card-sub { font-size: 12px; color: #888; }
+
+        /* --- 송금하기 페이지 스타일 --- */
+        .transfer-search {
+            width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid #eee; background: #f5f5f5; 
+            font-size: 14px; margin-bottom: 25px; outline: none;
+        }
+        .transfer-search:focus { border-color: var(--primary-color); background: #fff; }
+        
+        .recipient-list { list-style: none; padding: 0; margin: 0; }
+        .recipient-item { 
+            display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s;
+        }
+        .recipient-item:active { background-color: #f9f9f9; }
+        .recipient-avatar { 
+            width: 48px; height: 48px; border-radius: 50%; background-color: #eee; margin-right: 15px; 
+            display: flex; align-items: center; justify-content: center; font-weight: 700; color: #555; font-size: 18px;
+            position: relative;
+        }
+        .badge-nexus {
+            position: absolute; bottom: -2px; right: -2px; background: var(--primary-color); color: white;
+            font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
+        }
+        .recipient-info { flex: 1; }
+        .recipient-name { font-size: 16px; font-weight: 700; color: var(--text-color); margin-bottom: 4px; }
+        .recipient-detail { font-size: 13px; color: var(--sub-text-color); }
+
+        .big-money-input-wrapper {
+            background-color: #fff; border: 2px solid var(--primary-color); border-radius: 12px;
+            padding: 15px; margin: 20px 0; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(243, 115, 33, 0.1);
+        }
+        .big-money-input {
+            width: 100%; border: none; background: transparent; font-size: 32px; font-weight: 800;
+            outline: none; text-align: center; color: var(--text-color);
+        }
+        .big-money-input::placeholder { color: #ccc; }
+        .big-money-input[type="number"] { -moz-appearance: textfield; }
+        .big-money-input[type="number"]::-webkit-outer-spin-button, 
+        .big-money-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* --- [NEW] 비밀번호 입력 (PIN) 페이지 --- */
+        .pin-container { text-align: center; margin-top: 30px; }
+        .pin-message { font-size: 18px; font-weight: 700; margin-bottom: 30px; line-height: 1.4; color: #333; }
+        .pin-display { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; }
+        .pin-dot { width: 16px; height: 16px; border-radius: 50%; background-color: #ddd; transition: all 0.2s; }
+        .pin-dot.filled { background-color: #333; transform: scale(1.2); }
+
+        /* 보안 키패드 스타일 */
+        .num-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 0 20px; max-width: 350px; margin: 0 auto; }
+        .num-key { 
+            padding: 20px 0; font-size: 24px; font-weight: 600; color: #333; text-align: center; 
+            border-radius: 12px; cursor: pointer; user-select: none; transition: background 0.2s;
+        }
+        .num-key:active { background-color: #f0f0f0; }
+        .num-key.empty { cursor: default; }
+
+        /* --- [NEW] 완료 페이지 (Success) --- */
+        .success-container { text-align: center; padding-top: 40px; }
+        .success-icon { 
+            width: 80px; height: 80px; background: var(--primary-color); border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px;
+            box-shadow: 0 10px 20px rgba(243, 115, 33, 0.3);
+        }
+        .success-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; color: var(--text-color); }
+        .success-desc { font-size: 16px; color: var(--sub-text-color); margin-bottom: 40px; }
+        
+        .success-btns { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-share { flex: 1; background: #eee; color: #333; font-weight: 700; border: none; padding: 15px; border-radius: 12px; cursor: pointer; }
+        .btn-complete { flex: 1; background: var(--primary-color); color: white; font-weight: 700; border: none; padding: 15px; border-radius: 12px; cursor: pointer; }
+
+
+        /* Bottom Floating Bar */
         .bottom-floating-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background-color: rgba(243, 115, 33, 0.95); /* 한화 오렌지 투명도 95% */
+            background-color: rgba(243, 115, 33, 0.95);
             padding: 20px; padding-bottom: 30px;
             border-radius: 20px 20px 0 0; text-align: center; color: white; font-size: 18px; font-weight: 700;
             cursor: pointer; z-index: 100;
@@ -167,7 +257,7 @@
             max-width: 450px; margin: 0 auto;
         }
 
-        /* 공통 입력 폼 스타일 */
+        /* Common Inputs */
         .input-group { margin-bottom: 14px; }
         .input-group label { display: block; font-size: 13px; color: var(--sub-text-color); margin-bottom: 6px; }
         .input-group input, .input-group select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e5e7eb; font-size: 15px; background: #fff; }
@@ -207,8 +297,8 @@
         </div>
 
         <div class="balance-area">
-            <div class="currency">총 잔액 (USD 환산)</div>
-            <div class="amount" id="total-assets">$3,860.00</div>
+            <div class="currency">총 잔액 (KRW)</div>
+            <div class="amount" id="total-assets">₩5,000,000</div>
         </div>
 
         <div class="action-tray">
@@ -274,14 +364,14 @@
                 </div>
 
                 <div class="dual-currency">
-                    <div class="currency-box">
+                    <div class="currency-box active-input">
                         <small>KRW (원화)</small>
-                        <input id="charge-krw-input" type="text" inputmode="decimal" placeholder="0" readonly>
+                        <input id="charge-krw-input" type="number" inputmode="numeric" placeholder="10,000 이상" oninput="calculateFromKrw(this.value)">
                     </div>
-                    <div style="color:#ddd; font-size: 20px;">|</div>
+                    <div class="swap-arrow"><i class="fas fa-exchange-alt"></i></div>
                     <div class="currency-box">
                         <small id="local-currency-label">USD (현지 통화)</small>
-                        <input id="charge-local-input" type="text" inputmode="decimal" placeholder="0" readonly>
+                        <input id="charge-local-input" type="text" placeholder="0.00" readonly>
                     </div>
                 </div>
 
@@ -325,27 +415,49 @@
                         <div class="radio-circle"></div> 
                         <span><i class="fas fa-credit-card" style="color:var(--primary-color); margin-right:8px;"></i>신용카드 / 체크카드</span>
                     </div>
+                    
                     <div id="card-detail" class="detail-box">
-                        <div class="input-group">
-                            <label>카드 번호</label>
-                            <input type="text" placeholder="0000 0000 0000 0000" inputmode="numeric" maxlength="19">
+                        <p style="font-size:13px; color:#666; margin-bottom:10px;">사용할 카드를 선택하세요</p>
+                        <div class="saved-card-list">
+                            <label class="saved-card-item" onclick="toggleCardMode('saved')">
+                                <input type="radio" name="card_select" value="9334" checked>
+                                <div>
+                                    <div class="saved-card-info">Mastercard **** 9334</div>
+                                    <div class="saved-card-sub">법인카드 (일시불)</div>
+                                </div>
+                            </label>
+                            <label class="saved-card-item" onclick="toggleCardMode('saved')">
+                                <input type="radio" name="card_select" value="8665">
+                                <div>
+                                    <div class="saved-card-info">Visa **** 8665</div>
+                                    <div class="saved-card-sub">개인카드</div>
+                                </div>
+                            </label>
+                            <label class="saved-card-item" onclick="toggleCardMode('new')">
+                                <input type="radio" name="card_select" value="new">
+                                <div>
+                                    <div class="saved-card-info" style="color:var(--primary-color);">+ 새 카드 등록</div>
+                                </div>
+                            </label>
                         </div>
-                        <div style="display:flex; gap:10px;">
-                            <div class="input-group" style="flex:1;">
-                                <label>유효기간 (MM/YY)</label>
-                                <input type="text" placeholder="12/25" maxlength="5">
+                        <div id="new-card-form" style="margin-top:15px; border-top:1px dashed #ddd; padding-top:15px; display:none;">
+                            <div class="input-group">
+                                <label>카드 번호</label>
+                                <input type="text" placeholder="0000 0000 0000 0000" inputmode="numeric" maxlength="19">
                             </div>
-                            <div class="input-group" style="flex:1;">
-                                <label>CVC</label>
-                                <input type="password" placeholder="***" maxlength="3" inputmode="numeric">
+                            <div style="display:flex; gap:10px;">
+                                <div class="input-group" style="flex:1;">
+                                    <label>유효기간 (MM/YY)</label>
+                                    <input type="text" placeholder="12/25" maxlength="5">
+                                </div>
+                                <div class="input-group" style="flex:1;">
+                                    <label>CVC</label>
+                                    <input type="password" placeholder="***" maxlength="3" inputmode="numeric">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="payment-option" onclick="selectMethod(this, 'bank')">
-                        <div class="radio-circle"></div> 
-                        <span><i class="fas fa-university" style="color:var(--primary-color); margin-right:8px;"></i>무통장입금 (가상계좌)</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -353,14 +465,128 @@
 
     <section class="page" id="page-transfer">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
+        
         <div class="form-card">
-            <h2 style="margin-top:0;">송금 (연결계좌)</h2>
-            <p style="color:var(--sub-text-color); margin-top:4px;">연결된 국내 계좌로 즉시 이체합니다.</p>
-            <div class="input-group">
-                <label for="transfer-amount">이체 금액 (₩)</label>
-                <input type="number" id="transfer-amount" min="0" inputmode="numeric" placeholder="예: 30000">
+            <h2 style="margin-top:0; margin-bottom:20px;">송금하기</h2>
+            
+            <div id="transfer-step-1">
+                <input type="text" class="transfer-search" placeholder="계좌번호나 이름 입력">
+                
+                <h3 style="font-size:15px; margin-bottom:15px; color:#555;">최근 보낸 분</h3>
+                
+                <ul class="recipient-list">
+                    <li class="recipient-item" onclick="selectRecipient('Ryan', 'Nexus Friend')">
+                        <div class="recipient-avatar">R <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Ryan</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Bailey', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#e3f2fd; color:#1565c0;">B <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Bailey</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Michael', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#f3e5f5; color:#7b1fa2;">M <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Michael</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    <li class="recipient-item" onclick="selectRecipient('Leah', 'Nexus Friend')">
+                        <div class="recipient-avatar" style="background:#e8f5e9; color:#2e7d32;">L <span class="badge-nexus">N</span></div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">Leah</div>
+                            <div class="recipient-detail">Nexus Friend</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                    
+                    <li class="recipient-item" onclick="selectRecipient('홍길동', '하나은행 715-***')">
+                        <div class="recipient-avatar" style="background:#009490; color:white;">홍</div>
+                        <div class="recipient-info">
+                            <div class="recipient-name">홍길동</div>
+                            <div class="recipient-detail">하나은행 71500000000000</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
+                    </li>
+                </ul>
             </div>
-            <button class="btn primary" onclick="submitTransfer()"><i class="fas fa-paper-plane"></i> 송금하기</button>
+
+            <div id="transfer-step-2" class="hidden">
+                <div style="background:#f9f9f9; padding:15px; border-radius:12px; margin-bottom:20px; text-align:center;">
+                    <div style="font-size:14px; color:#888;">받는 분</div>
+                    <div id="selected-recipient-name" style="font-size:18px; font-weight:700; color:#333; margin-top:5px;"></div>
+                    <div id="selected-recipient-info" style="font-size:13px; color:#666;"></div>
+                </div>
+
+                <div style="margin-bottom:6px; font-size:14px; color:#666; text-align:center;">보낼 금액</div>
+                
+                <div class="big-money-input-wrapper">
+                    <input type="number" id="transfer-amount" class="big-money-input" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn" style="flex:1; background:#eee; color:#333;" onclick="resetTransfer()">취소</button>
+                    <button class="btn primary" style="flex:2;" onclick="submitTransfer()">보내기</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="page" id="page-password">
+        <div style="text-align:right; padding-bottom:10px;">
+            <span onclick="cancelPassword()" style="font-size:14px; color:#888; cursor:pointer;">취소</span>
+        </div>
+
+        <div class="pin-container">
+            <div class="pin-message" id="pin-message-text">
+                홍길동님께<br>50,000KRW를 송금합니다.
+            </div>
+
+            <div class="pin-display" id="pin-display">
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+            </div>
+
+            <div class="num-pad">
+                <div class="num-key" onclick="onKeyClick(1)">1</div>
+                <div class="num-key" onclick="onKeyClick(2)">2</div>
+                <div class="num-key" onclick="onKeyClick(3)">3</div>
+                <div class="num-key" onclick="onKeyClick(4)">4</div>
+                <div class="num-key" onclick="onKeyClick(5)">5</div>
+                <div class="num-key" onclick="onKeyClick(6)">6</div>
+                <div class="num-key" onclick="onKeyClick(7)">7</div>
+                <div class="num-key" onclick="onKeyClick(8)">8</div>
+                <div class="num-key" onclick="onKeyClick(9)">9</div>
+                <div class="num-key empty"></div>
+                <div class="num-key" onclick="onKeyClick(0)">0</div>
+                <div class="num-key" onclick="onDeleteClick()"><i class="fas fa-backspace"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="page" id="page-success">
+        <div class="success-container">
+            <div class="success-icon"><i class="fas fa-check"></i></div>
+            <div class="success-title" id="success-title">송금 완료!</div>
+            <div class="success-desc" id="success-desc">정상적으로 처리되었습니다.</div>
+
+            <div class="success-btns">
+                <button class="btn-share" onclick="shareTransaction()"><i class="fas fa-share-alt"></i> 공유하기</button>
+                <button class="btn-complete" onclick="finishTransaction()">완료</button>
+            </div>
         </div>
     </section>
 
@@ -403,7 +629,7 @@
     // 앱 데이터 및 상태 관리
     // ==========================================
     const state = {
-        totalAssetsUSD: 3860.00,
+        totalAssetsKRW: 5000000, 
         timeline: [
             { icon: 'fa-wallet', title: '선불계좌 충전', desc: '간편 충전 성공', amount: '+₩200,000' },
             { icon: 'fa-plane', title: '항공권 결제', desc: 'Korea → USA', amount: '-₩650,000' },
@@ -414,37 +640,51 @@
         USD: 1300, 
         EUR: 1400, 
         AUD: 850,
-        JPY: 900 // 환전용 예시
+        JPY: 900 
     };
+
+    // 임시 거래 데이터 (비밀번호 입력 중 유지)
+    let transactionContext = {
+        type: '', // 'transfer' or 'charge'
+        amount: 0,
+        recipient: '',
+    };
+    
+    // PIN 입력 상태
+    let currentPin = "";
+
+    function renderBalance() {
+        document.getElementById('total-assets').innerText = '₩' + state.totalAssetsKRW.toLocaleString();
+    }
 
     // ==========================================
     // 네비게이션 로직
     // ==========================================
     function navigate(targetId) {
-        // 모든 페이지 숨김
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        // 타겟 페이지만 보이기
         const targetPage = document.getElementById(targetId);
         if(targetPage) targetPage.classList.add('active');
         
-        // 하단 탭 상태 업데이트
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
         if (activeNav) activeNav.classList.add('active');
         else if (targetId === 'page-home') document.querySelector('.nav-item[data-target="page-home"]').classList.add('active');
 
-        // 충전 페이지 진입 시 리셋, 나갈 때 플로팅 바 숨김
+        // 페이지별 초기화
+        if (targetId === 'page-charge') resetCharge();
+        if (targetId === 'page-transfer') resetTransfer();
+        
+        // 플로팅바 제어
         if (targetId === 'page-charge') {
-            resetCharge();
+             // 충전 페이지 진입 시에는 step1이므로 플로팅 바 숨김
+             document.getElementById('charge-bottom-bar').classList.add('hidden');
         } else {
             document.getElementById('charge-bottom-bar').classList.add('hidden');
         }
+
         window.scrollTo(0,0);
     }
 
-    // ==========================================
-    // 유틸리티: 토스트 메시지
-    // ==========================================
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg;
@@ -457,156 +697,235 @@
     }
 
     // ==========================================
-    // 충전하기 로직 (New Logic + Old Features)
+    // [NEW] 비밀번호(PIN) 로직
+    // ==========================================
+    function startPasswordFlow(type, amount, recipientName) {
+        transactionContext = { type, amount, recipient: recipientName };
+        currentPin = "";
+        updatePinDisplay();
+
+        // 메시지 설정
+        const msgEl = document.getElementById('pin-message-text');
+        if (type === 'transfer') {
+            msgEl.innerHTML = `${recipientName}님께<br>${amount.toLocaleString()}KRW를 송금합니다.`;
+        } else {
+            msgEl.innerHTML = `${amount.toLocaleString()}KRW를<br>충전합니다.`;
+        }
+
+        // 페이지 이동 (단순 display 전환)
+        navigate('page-password');
+    }
+
+    function onKeyClick(num) {
+        if (currentPin.length < 6) {
+            currentPin += num;
+            updatePinDisplay();
+            
+            if (currentPin.length === 6) {
+                // 약간의 딜레이 후 성공 처리
+                setTimeout(checkPin, 200);
+            }
+        }
+    }
+
+    function onDeleteClick() {
+        if (currentPin.length > 0) {
+            currentPin = currentPin.slice(0, -1);
+            updatePinDisplay();
+        }
+    }
+
+    function updatePinDisplay() {
+        const dots = document.querySelectorAll('.pin-dot');
+        dots.forEach((dot, idx) => {
+            if (idx < currentPin.length) dot.classList.add('filled');
+            else dot.classList.remove('filled');
+        });
+    }
+
+    function checkPin() {
+        // 실제 앱에선 서버 검증 하겠지만 여기선 무조건 성공
+        showSuccessPage();
+    }
+
+    function cancelPassword() {
+        // 취소 시 홈으로 혹은 이전 페이지로 (여기선 홈으로)
+        navigate('page-home');
+    }
+
+    // ==========================================
+    // [NEW] 완료(Success) 로직
+    // ==========================================
+    function showSuccessPage() {
+        const { type, amount, recipient } = transactionContext;
+        const titleEl = document.getElementById('success-title');
+        const descEl = document.getElementById('success-desc');
+
+        if (type === 'transfer') {
+            titleEl.innerText = "송금 완료!";
+            descEl.innerText = `${recipient}님께 ${amount.toLocaleString()}원 송금됨`;
+            // 잔액 차감
+            state.totalAssetsKRW -= amount;
+        } else {
+            titleEl.innerText = "충전 완료!";
+            descEl.innerText = `${amount.toLocaleString()}원 충전 완료`;
+            // 잔액 추가
+            state.totalAssetsKRW += amount;
+        }
+        renderBalance();
+        navigate('page-success');
+    }
+
+    function shareTransaction() {
+        const { type, amount, recipient } = transactionContext;
+        let msg = "";
+        if (type === 'transfer') msg = `${recipient}님에게 ${amount.toLocaleString()}원 송금 완료!`;
+        else msg = `${amount.toLocaleString()}원 충전 완료!`;
+        
+        alert(`[공유 메시지 전송]\n${msg}`);
+    }
+
+    function finishTransaction() {
+        navigate('page-home');
+    }
+
+    // ==========================================
+    // 송금하기 로직
+    // ==========================================
+    function selectRecipient(name, info) {
+        document.getElementById('selected-recipient-name').innerText = name;
+        document.getElementById('selected-recipient-info').innerText = info;
+        document.getElementById('transfer-step-1').classList.add('hidden');
+        document.getElementById('transfer-step-2').classList.remove('hidden');
+        document.getElementById('transfer-amount').focus();
+    }
+
+    function resetTransfer() {
+        document.getElementById('transfer-amount').value = '';
+        document.getElementById('transfer-step-1').classList.remove('hidden');
+        document.getElementById('transfer-step-2').classList.add('hidden');
+    }
+
+    function submitTransfer() {
+        const val = parseInt(document.getElementById('transfer-amount').value) || 0;
+        const name = document.getElementById('selected-recipient-name').innerText;
+        
+        if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
+        
+        // [변경] 바로 완료하지 않고 비밀번호 페이지로 이동
+        startPasswordFlow('transfer', val, name);
+    }
+
+    // ==========================================
+    // 충전하기 로직
     // ==========================================
     let chargeAmount = 0;
     let selectedCurrency = 'USD';
     let selectedMethod = null;
 
-    // 통화 설정
     function setCurrency(code, el) {
-        // 2단계 진행 중이면 변경 불가 (흐린 상태)
         if(document.getElementById('step1-area').classList.contains('disabled-area')) return;
-
         selectedCurrency = code;
         document.querySelectorAll('.currency-choice').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        
         document.getElementById('local-currency-label').innerText = `${code} (현지 통화)`;
-        updateChargeInputs();
+        calculateFromKrw(document.getElementById('charge-krw-input').value);
     }
 
-    // 금액 추가
     function addMoney(val) {
-        chargeAmount += val;
-        updateChargeInputs();
+        if(document.getElementById('step1-area').classList.contains('disabled-area')) return;
+        let currentVal = parseInt(document.getElementById('charge-krw-input').value) || 0;
+        let newVal = currentVal + val;
+        document.getElementById('charge-krw-input').value = newVal;
+        calculateFromKrw(newVal);
     }
 
-    // 화면 업데이트 (숫자 콤마, 환율 계산)
-    function updateChargeInputs() {
-        // 원화 표시
-        document.getElementById('charge-krw-input').value = chargeAmount.toLocaleString();
-        
-        // 외화 계산 표시
+    function calculateFromKrw(val) {
+        chargeAmount = parseInt(val) || 0;
         const rate = exchangeRates[selectedCurrency] || 1300;
         const localVal = chargeAmount / rate;
         document.getElementById('charge-local-input').value = localVal > 0 ? localVal.toFixed(2) : '';
-
-        // 하단 플로팅 바 업데이트
         document.getElementById('bottom-charge-amount').innerText = chargeAmount.toLocaleString();
     }
 
-    // 초기화 (리셋)
     function resetCharge() {
         chargeAmount = 0;
         selectedMethod = null;
-        updateChargeInputs();
-
-        // 1단계 활성화, 2단계 숨김
+        document.getElementById('charge-krw-input').value = '';
+        calculateFromKrw(0);
         document.getElementById('step1-area').classList.remove('disabled-area');
-        document.getElementById('charge-action-row').style.display = 'flex'; // 버튼 다시 보이기
-        
+        document.getElementById('charge-action-row').style.display = 'flex';
         document.getElementById('step2-area').classList.add('hidden');
         document.getElementById('charge-bottom-bar').classList.add('hidden');
-
-        // 결제 수단 선택 해제 및 디테일 박스 숨김
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         document.querySelectorAll('.detail-box').forEach(box => box.classList.remove('show'));
     }
 
-    // [다음] 버튼 기능
     function goNextStep() {
-        if (chargeAmount <= 0) {
-            showToast('충전할 금액을 선택해주세요.');
+        if (chargeAmount < 10000) {
+            alert('최소 10,000원 이상 충전 가능합니다.');
             return;
         }
-
-        // 1단계 흐리게
         document.getElementById('step1-area').classList.add('disabled-area');
-        // '초기화|다음' 버튼 영역 숨김 (순차적 느낌)
         document.getElementById('charge-action-row').style.display = 'none';
-        
-        // 2단계 보이기 + 하단 플로팅 바 보이기
         document.getElementById('step2-area').classList.remove('hidden');
         document.getElementById('charge-bottom-bar').classList.remove('hidden');
-        
-        // 살짝 스크롤 내려주기
-        // window.scrollTo({ top: 200, behavior: 'smooth' });
     }
 
-    // 결제 수단 선택 시 (바코드/카드폼 표시 로직 포함)
     function selectMethod(el, methodKey) {
-        // 기존 선택 해제
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         document.querySelectorAll('.detail-box').forEach(box => box.classList.remove('show'));
-
-        // 선택 표시
         el.classList.add('selected');
         selectedMethod = methodKey;
-
-        // 세부 내용 표시 (바코드 or 카드폼)
-        if (methodKey === 'cash') {
-            document.getElementById('barcode-detail').classList.add('show');
-        } else if (methodKey === 'card') {
+        if (methodKey === 'cash') document.getElementById('barcode-detail').classList.add('show');
+        else if (methodKey === 'card') {
             document.getElementById('card-detail').classList.add('show');
+            document.querySelector('input[name="card_select"][value="9334"]').checked = true;
+            toggleCardMode('saved');
         }
     }
 
-    // 최종 충전 완료
+    function toggleCardMode(mode) {
+        const newCardForm = document.getElementById('new-card-form');
+        newCardForm.style.display = (mode === 'new') ? 'block' : 'none';
+    }
+
     function finalCharge() {
-        if (!selectedMethod) {
-            showToast('결제 수단을 선택해주세요.');
-            return;
+        if (!selectedMethod) return showToast('결제 수단을 선택해주세요.');
+        if (selectedMethod === 'card') {
+            const cardSelection = document.querySelector('input[name="card_select"]:checked').value;
+            if (cardSelection === 'new') {
+                const inputs = document.querySelectorAll('#new-card-form input');
+                for(let input of inputs) if(!input.value) return alert('카드 정보를 모두 입력해주세요.');
+            }
         }
         
-        showToast(`${chargeAmount.toLocaleString()}원 충전 완료!`);
-        
-        // 자산 업데이트 (간단 시뮬레이션)
-        const rate = exchangeRates[selectedCurrency] || 1300;
-        state.totalAssetsUSD += (chargeAmount / rate);
-        document.getElementById('total-assets').innerText = `$${state.totalAssetsUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-
-        // 잠시 후 홈으로
-        setTimeout(() => {
-            navigate('page-home');
-        }, 1200);
-    }
-
-    // ==========================================
-    // 기타 페이지 (송금/환전) 로직 유지
-    // ==========================================
-    function submitTransfer() {
-        const val = document.getElementById('transfer-amount').value;
-        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
-        showToast('송금이 완료되었습니다.');
-        document.getElementById('transfer-amount').value = '';
-        navigate('page-home');
+        // [변경] 바로 완료하지 않고 비밀번호 페이지로 이동
+        startPasswordFlow('charge', chargeAmount, '내 지갑');
     }
 
     function submitRemit() {
-        const val = document.getElementById('remit-amount').value;
-        if(!val || val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        const val = parseInt(document.getElementById('remit-amount').value) || 0;
+        if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
+        if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
+
+        state.totalAssetsKRW -= val;
+        renderBalance();
         showToast('환전 신청이 완료되었습니다.');
         document.getElementById('remit-amount').value = '';
         navigate('page-home');
     }
 
-    // ==========================================
-    // 이벤트 리스너 등록
-    // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        // data-target 속성이 있는 모든 요소에 클릭 이벤트 연결
         document.querySelectorAll('[data-target]').forEach(el => {
             el.addEventListener('click', (e) => {
-                // 부모로 이벤트 전파 방지 (필요 시)
-                // e.stopPropagation(); 
                 const target = el.dataset.target;
                 navigate(target);
             });
         });
-        
-        // 초기화
-        updateChargeInputs();
+        resetCharge();
+        renderBalance();
     });
 
 </script>
