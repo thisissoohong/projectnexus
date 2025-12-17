@@ -44,7 +44,6 @@
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
             position: relative;
             padding-bottom: 90px;
-            overflow-x: hidden; /* 가로 스크롤 방지 */
         }
 
         .page { display: none; padding: 20px; }
@@ -125,37 +124,12 @@
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
 
-        /* --- [NEW] 내역(History) 스타일 + 필터 --- */
+        /* --- [NEW] 내역(History) 스타일 --- */
         .history-search {
             width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid #eee; background: #f5f5f5; 
-            font-size: 14px; margin-bottom: 10px; outline: none;
+            font-size: 14px; margin-bottom: 20px; outline: none;
         }
         .history-search:focus { border-color: var(--primary-color); background: #fff; }
-
-        /* 필터 바 스타일 */
-        .filter-container {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-        }
-        .filter-scroll-area {
-            flex: 1; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px;
-            -ms-overflow-style: none; scrollbar-width: none; /* 스크롤바 숨김 */
-        }
-        .filter-scroll-area::-webkit-scrollbar { display: none; }
-        
-        .filter-pill {
-            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; 
-            background: #fff; border: 1px solid #eee; color: #666; white-space: nowrap; cursor: pointer; transition: all 0.2s;
-        }
-        .filter-pill.active {
-            background: var(--button-bg-soft); color: var(--primary-color); border-color: var(--primary-color);
-        }
-        
-        .filter-reset-btn {
-            flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #eee; background: #fff;
-            display: flex; align-items: center; justify-content: center; color: #666; cursor: pointer;
-            box-shadow: -5px 0 10px rgba(255,255,255,1); /* 가려지는 효과 방지용 */
-        }
-        .filter-reset-btn:active { background: #f0f0f0; }
 
         .history-month-header {
             font-size: 13px; color: var(--sub-text-color); margin-bottom: 15px; margin-top: 10px; font-weight: 600;
@@ -187,26 +161,6 @@
             position: absolute; bottom: -2px; right: -2px; background: var(--primary-color); color: white;
             font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
         }
-
-        /* --- 카테고리 토글 (Bottom Sheet) --- */
-        .bottom-sheet-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); z-index: 100; display: none; opacity: 0; transition: opacity 0.3s;
-        }
-        .bottom-sheet {
-            position: fixed; bottom: 0; left: 0; right: 0; max-width: 450px; margin: 0 auto;
-            background: white; border-radius: 20px 20px 0 0; padding: 25px 20px 40px;
-            z-index: 101; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .bottom-sheet.open { transform: translateY(0); }
-        .sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-        .sheet-option {
-            padding: 15px; border-bottom: 1px solid #f0f0f0; font-size: 16px; font-weight: 600; color: #333;
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-        }
-        .sheet-option:last-child { border-bottom: none; }
-        .sheet-option:active { background: #f9f9f9; }
-        .sheet-option i { color: var(--sub-text-color); }
 
         /* --- 충전하기 스타일 --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
@@ -435,33 +389,11 @@
 
         <input type="text" class="history-search" placeholder="이름 또는 가맹점 검색" onkeyup="filterTransactions(this.value)">
 
-        <div class="filter-container">
-            <div class="filter-scroll-area">
-                <div class="filter-pill" onclick="applyFilter('income')" id="btn-filter-income">Incoming</div>
-                <div class="filter-pill" onclick="applyFilter('expense')" id="btn-filter-expense">Outgoing</div>
-                <div class="filter-pill" onclick="toggleSortDate()" id="btn-filter-date">Date <i class="fas fa-sort"></i></div>
-                <div class="filter-pill" onclick="openCategorySheet()" id="btn-filter-category">Category</div>
-            </div>
-            <div class="filter-reset-btn" onclick="resetFilters()">
-                <i class="fas fa-undo-alt"></i>
-            </div>
-        </div>
-
         <div class="history-month-header">최근 (RECENT)</div>
 
         <ul class="transaction-list" id="history-list">
             </ul>
     </section>
-
-    <div class="bottom-sheet-overlay" id="category-overlay" onclick="closeCategorySheet()"></div>
-    <div class="bottom-sheet" id="category-sheet">
-        <div class="sheet-title">카테고리 선택</div>
-        <div class="sheet-option" onclick="selectCategory('Eating Out')">Eating Out <i class="fas fa-utensils"></i></div>
-        <div class="sheet-option" onclick="selectCategory('Groceries')">Groceries <i class="fas fa-shopping-basket"></i></div>
-        <div class="sheet-option" onclick="selectCategory('Housing')">Housing <i class="fas fa-home"></i></div>
-        <div class="sheet-option" onclick="selectCategory('Shopping')">Shopping <i class="fas fa-shopping-bag"></i></div>
-        <div class="sheet-option" onclick="selectCategory('Transport')">Transport <i class="fas fa-bus"></i></div>
-    </div>
 
     <section class="page" id="page-cards">
         <a class="back-link" data-target="page-home"><i class="fas fa-arrow-left"></i> 홈으로</a>
@@ -819,23 +751,16 @@
     // ==========================================
     const state = {
         totalAssetsKRW: 5000000,
-        // 초기 거래 내역 데이터 (카테고리 추가)
+        // 초기 거래 내역 데이터
         transactions: [
-            { id: 1, type: 'income', category:'Transfer', title: 'Mathias Bee', date: '29 Jul, 5:00pm', amount: 520000, status: 'Received', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
-            { id: 2, type: 'expense', category:'Transport', title: 'Uber Ride', date: '24 Jul, 10:50pm', amount: 26000, status: 'Paid', avatarIcon: 'fab fa-uber', avatarBg: '#000', avatarColor: '#fff' },
-            { id: 3, type: 'income', category:'Transfer', title: 'John Doe', date: '30 Jun, 5:00am', amount: 4500000, status: 'Received', avatarInitial: 'JD', avatarBg: '#FCE4EC', avatarColor: '#C2185B' },
-            { id: 4, type: 'expense', category:'Shopping', title: 'Amazon', date: '26 Jun, 10:30am', amount: 420000, status: 'Paid', avatarIcon: 'fab fa-amazon', avatarBg: '#fff', avatarColor: '#333' },
-            { id: 5, type: 'expense', category:'Eating Out', title: 'Ayomide OA', date: '30 Jun, 8:20pm', amount: 30500, status: 'Sent', avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' }
+            { id: 1, type: 'income', title: 'Mathias Bee', date: '29 Jul, 5:00pm', amount: 520000, status: 'Received', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
+            { id: 2, type: 'expense', title: 'Uber Ride', date: '24 Jul, 10:50pm', amount: 26000, status: 'Paid', avatarIcon: 'fab fa-uber', avatarBg: '#000', avatarColor: '#fff' },
+            { id: 3, type: 'income', title: 'John Doe', date: '30 Jun, 5:00am', amount: 4500000, status: 'Received', avatarInitial: 'JD', avatarBg: '#FCE4EC', avatarColor: '#C2185B' },
+            { id: 4, type: 'expense', title: 'Amazon', date: '26 Jun, 10:30am', amount: 420000, status: 'Paid', avatarIcon: 'fab fa-amazon', avatarBg: '#fff', avatarColor: '#333' },
+            { id: 5, type: 'expense', title: 'Ayomide OA', date: '30 Jun, 8:20pm', amount: 30500, status: 'Sent', avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' }
         ]
     };
     
-    // 현재 필터 상태
-    let activeFilter = {
-        type: null, // 'income' | 'expense'
-        category: null, // string
-        sortDate: 'desc' // 'desc' | 'asc'
-    };
-
     const exchangeRates = { 
         USD: 1300, 
         EUR: 1400, 
@@ -856,31 +781,17 @@
     }
 
     // ==========================================
-    // 내역 렌더링 (Dynamic + Filter)
+    // 내역 렌더링 (Dynamic)
     // ==========================================
     function renderHistory() {
         const list = document.getElementById('history-list');
-        list.innerHTML = ''; 
+        list.innerHTML = ''; // 초기화
 
-        // 1. 필터링
-        let filtered = state.transactions.filter(t => {
-            if (activeFilter.type && t.type !== activeFilter.type) return false;
-            if (activeFilter.category && t.category !== activeFilter.category) return false;
-            return true;
-        });
-
-        // 2. 정렬 (날짜 단순 문자열 비교 - 실제 앱에선 Date객체 사용 권장)
-        // 여기선 간단히 id(최신순) 혹은 역순으로 처리
-        if (activeFilter.sortDate === 'asc') {
-            filtered.sort((a, b) => a.id - b.id);
-        } else {
-            filtered.sort((a, b) => b.id - a.id);
-        }
-
-        filtered.forEach(t => {
+        state.transactions.forEach(t => {
             const li = document.createElement('li');
             li.className = 'transaction-item';
             
+            // 아바타 처리 로직
             let avatarHtml = '';
             if (t.avatarUrl) {
                 avatarHtml = `<div class="t-avatar" style="background-image:url('${t.avatarUrl}')"><span class="badge-nexus">N</span></div>`;
@@ -901,7 +812,7 @@
                     ${avatarHtml}
                     <div class="t-info">
                         <span class="t-title">${t.title}</span>
-                        <span class="t-date">${t.date} &middot; <small>${t.category}</small></span>
+                        <span class="t-date">${t.date}</span>
                     </div>
                 </div>
                 <div class="t-right">
@@ -913,78 +824,7 @@
         });
     }
 
-    // ==========================================
-    // 필터링 로직
-    // ==========================================
-    function applyFilter(filterType) {
-        // 기존 카테고리 필터 해제
-        activeFilter.category = null;
-        updateFilterUI();
-
-        // 토글 로직
-        if (activeFilter.type === filterType) {
-            activeFilter.type = null; // 끄기
-        } else {
-            activeFilter.type = filterType; // 켜기
-        }
-        renderHistory();
-        updateFilterUI();
-    }
-
-    function toggleSortDate() {
-        activeFilter.sortDate = activeFilter.sortDate === 'desc' ? 'asc' : 'desc';
-        renderHistory();
-        updateFilterUI();
-    }
-
-    function openCategorySheet() {
-        document.getElementById('category-sheet').classList.add('open');
-        document.getElementById('category-overlay').style.display = 'block';
-        setTimeout(() => document.getElementById('category-overlay').style.opacity = 1, 10);
-    }
-
-    function closeCategorySheet() {
-        document.getElementById('category-sheet').classList.remove('open');
-        document.getElementById('category-overlay').style.opacity = 0;
-        setTimeout(() => document.getElementById('category-overlay').style.display = 'none', 300);
-    }
-
-    function selectCategory(catName) {
-        // 타입 필터 초기화 후 카테고리 적용
-        activeFilter.type = null;
-        activeFilter.category = catName;
-        closeCategorySheet();
-        renderHistory();
-        updateFilterUI();
-    }
-
-    function resetFilters() {
-        activeFilter = { type: null, category: null, sortDate: 'desc' };
-        renderHistory();
-        updateFilterUI();
-    }
-
-    function updateFilterUI() {
-        // 버튼 활성화 상태 스타일링
-        const btnIncome = document.getElementById('btn-filter-income');
-        const btnExpense = document.getElementById('btn-filter-expense');
-        const btnDate = document.getElementById('btn-filter-date');
-        const btnCat = document.getElementById('btn-filter-category');
-
-        btnIncome.classList.toggle('active', activeFilter.type === 'income');
-        btnExpense.classList.toggle('active', activeFilter.type === 'expense');
-        
-        btnDate.innerHTML = `Date <i class="fas fa-sort-${activeFilter.sortDate === 'asc' ? 'up' : 'down'}"></i>`;
-        
-        if (activeFilter.category) {
-            btnCat.innerText = activeFilter.category;
-            btnCat.classList.add('active');
-        } else {
-            btnCat.innerText = 'Category';
-            btnCat.classList.remove('active');
-        }
-    }
-
+    // 날짜 포맷 헬퍼
     function getFormattedDate() {
         const now = new Date();
         const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -997,7 +837,7 @@
     }
 
     // ==========================================
-    // 네비게이션 로직 (하단바 유지 조건 수정)
+    // 네비게이션 로직
     // ==========================================
     function navigate(targetId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1005,11 +845,7 @@
         if(targetPage) targetPage.classList.add('active');
         
         const bottomNav = document.querySelector('.bottom-nav');
-        
-        // [수정] 하단바를 유지해야 하는 메인 페이지 목록
-        const mainPages = ['page-home', 'page-history', 'page-cards', 'page-all'];
-        
-        if (mainPages.includes(targetId)) {
+        if (targetId === 'page-home') {
             bottomNav.classList.remove('hidden');
         } else {
             bottomNav.classList.add('hidden');
@@ -1038,7 +874,7 @@
     }
 
     // ==========================================
-    // 내역 검색 필터링 로직 (기존 유지)
+    // 내역 검색 필터링 로직
     // ==========================================
     function filterTransactions(val) {
         const list = document.getElementById('history-list');
@@ -1127,11 +963,12 @@
             descEl.innerText = `${recipient}님께 ${amount.toLocaleString()}원 송금됨`;
             state.totalAssetsKRW -= amount;
             
+            // 송금 내역 추가
             newTx.type = 'expense';
-            newTx.category = 'Transfer';
             newTx.status = 'Sent';
+            // 이니셜 아바타 생성
             newTx.avatarInitial = recipient.charAt(0).toUpperCase();
-            newTx.avatarBg = '#E0F7FA'; 
+            newTx.avatarBg = '#E0F7FA'; // 임의 색상
             newTx.avatarColor = '#006064';
 
         } else {
@@ -1139,17 +976,18 @@
             descEl.innerText = `${amount.toLocaleString()}원 충전 완료`;
             state.totalAssetsKRW += amount;
             
+            // 충전 내역 추가
             newTx.type = 'income';
-            newTx.category = 'Charge';
             newTx.status = 'Received';
             newTx.avatarIcon = 'fas fa-wallet';
             newTx.avatarBg = '#FFF3E0';
             newTx.avatarColor = '#E65100';
         }
         
+        // 내역 배열 맨 앞에 추가
         state.transactions.unshift(newTx);
-        renderHistory(); 
-        renderBalance(); 
+        renderHistory(); // 내역 리스트 다시 그리기
+        renderBalance(); // 잔액 업데이트
         
         navigate('page-success');
     }
@@ -1300,7 +1138,7 @@
         });
         resetCharge();
         renderBalance();
-        renderHistory(); 
+        renderHistory(); // 초기 내역 렌더링
     });
 
 </script>
