@@ -18,7 +18,7 @@
             --card-gradient: linear-gradient(135deg, #FF9966, #FF5E62); 
             --tab-color-active: #F37321;
             --button-bg-soft: #FFF0E6;
-            --income-color: #F37321; 
+            --income-color: #F37321; /* 한화 오렌지로 입금 강조 */
             --expense-color: #222222;
         }
 
@@ -31,7 +31,7 @@
             background-color: var(--background-color);
             color: var(--text-color);
             min-height: 100vh;
-            padding-bottom: 80px; 
+            padding-bottom: 80px; /* 하단 탭 바 공간 확보 */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -44,12 +44,13 @@
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
             position: relative;
             padding-bottom: 90px;
-            overflow-x: hidden; 
+            overflow-x: hidden; /* 가로 스크롤 방지 */
         }
 
         .page { display: none; padding: 20px; }
         .page.active { display: block; }
 
+        /* 유틸리티 클래스 */
         .hidden { display: none !important; }
         .disabled-area { opacity: 0.4; pointer-events: none; }
         
@@ -124,28 +125,26 @@
         .back-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-color); cursor: pointer; margin-bottom: 15px; font-size: 14px; opacity: 0.7; text-decoration: none;}
         .back-link:hover { opacity: 1; color: var(--primary-color); }
 
-        /* --- 내역(History) 스타일 + 필터 --- */
+        /* --- [NEW] 내역(History) 스타일 + 필터 --- */
         .history-search {
             width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid #eee; background: #f5f5f5; 
-            font-size: 14px; margin-bottom: 15px; outline: none;
+            font-size: 14px; margin-bottom: 10px; outline: none;
         }
         .history-search:focus { border-color: var(--primary-color); background: #fff; }
 
-        /* [수정] 필터 바 정렬 개선 */
+        /* 필터 바 스타일 */
         .filter-container {
-            display: flex; align-items: center; width: 100%; margin-bottom: 20px; gap: 8px;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
         }
         .filter-scroll-area {
-            flex: 1; display: flex; gap: 8px; overflow-x: auto; padding: 4px 0;
-            -ms-overflow-style: none; scrollbar-width: none;
-            align-items: center; /* 세로 중앙 정렬 */
+            flex: 1; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px;
+            -ms-overflow-style: none; scrollbar-width: none; /* 스크롤바 숨김 */
         }
         .filter-scroll-area::-webkit-scrollbar { display: none; }
         
         .filter-pill {
             padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; 
             background: #fff; border: 1px solid #eee; color: #666; white-space: nowrap; cursor: pointer; transition: all 0.2s;
-            height: 36px; display: flex; align-items: center; /* 높이 맞춤 */
         }
         .filter-pill.active {
             background: var(--button-bg-soft); color: var(--primary-color); border-color: var(--primary-color);
@@ -154,7 +153,7 @@
         .filter-reset-btn {
             flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #eee; background: #fff;
             display: flex; align-items: center; justify-content: center; color: #666; cursor: pointer;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.03); margin-left: auto;
+            box-shadow: -5px 0 10px rgba(255,255,255,1); /* 가려지는 효과 방지용 */
         }
         .filter-reset-btn:active { background: #f0f0f0; }
 
@@ -166,10 +165,8 @@
         }
         .transaction-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 0; border-bottom: 1px solid #f5f5f5; cursor: pointer; /* 클릭 가능 표시 */
+            padding: 18px 0; border-bottom: 1px solid #f5f5f5;
         }
-        .transaction-item:active { background-color: #f9f9f9; }
-
         .t-left { display: flex; align-items: center; gap: 15px; }
         
         .t-avatar { 
@@ -183,7 +180,7 @@
         
         .t-right { text-align: right; display: flex; flex-direction: column; gap: 4px; }
         .t-amount { font-size: 16px; font-weight: 700; color: var(--expense-color); }
-        .t-amount.income { color: var(--income-color); } 
+        .t-amount.income { color: var(--income-color); } /* 한화 오렌지 */
         .t-status { font-size: 11px; color: var(--sub-text-color); font-weight: 500; }
 
         .badge-nexus {
@@ -191,52 +188,7 @@
             font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
         }
 
-        /* --- [NEW] Transaction Details Page --- */
-        .detail-header { text-align: center; margin-bottom: 30px; }
-        .detail-amount { font-size: 36px; font-weight: 800; color: var(--text-color); margin-bottom: 10px; }
-        .detail-title { font-size: 18px; color: #555; }
-        
-        .detail-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 0; border-bottom: 1px solid #f5f5f5; font-size: 15px;
-        }
-        .detail-label { color: #888; font-weight: 600; width: 80px; }
-        .detail-val { font-weight: 700; color: #333; flex: 1; text-align: right; }
-        
-        .cat-edit-btn {
-            background: #f0f0f0; padding: 6px 12px; border-radius: 15px; font-size: 12px; 
-            margin-left: 10px; cursor: pointer; color: #555; display: inline-block;
-        }
-
-        .payment-method-box {
-            display: inline-flex; align-items: center; gap: 8px; font-weight: 700;
-        }
-        .pm-card-icon {
-            width: 20px; height: 14px; background: var(--primary-color); border-radius: 3px; display: inline-block;
-        }
-        .pm-apple-icon { font-size: 18px; color: #000; }
-
-        .note-add-link {
-            color: var(--primary-color); font-weight: 700; text-decoration: underline; cursor: pointer;
-        }
-        .note-content { color: #333; }
-
-        .split-btn-container {
-            margin-top: 40px; display: flex; justify-content: center;
-        }
-        .split-btn {
-            background: #fff; border: 1px solid #ddd; padding: 12px 25px; border-radius: 30px;
-            display: flex; align-items: center; gap: 10px; font-weight: 700; color: #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
-        }
-        .split-avatars { display: flex; margin-right: 5px; }
-        .split-avatar { 
-            width: 24px; height: 24px; border-radius: 50%; background: #eee; border: 2px solid #fff; 
-            margin-left: -8px; display: flex; align-items: center; justify-content: center; font-size: 10px;
-        }
-        .split-avatar:first-child { margin-left: 0; }
-
-        /* --- Bottom Sheet (Category & Note) --- */
+        /* --- 카테고리 토글 (Bottom Sheet) --- */
         .bottom-sheet-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); z-index: 100; display: none; opacity: 0; transition: opacity 0.3s;
@@ -255,12 +207,6 @@
         .sheet-option:last-child { border-bottom: none; }
         .sheet-option:active { background: #f9f9f9; }
         .sheet-option i { color: var(--sub-text-color); }
-
-        .note-input-wrapper { display: flex; gap: 10px; }
-        .note-input {
-            flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 15px; outline: none;
-        }
-        .note-input:focus { border-color: var(--primary-color); }
 
         /* --- 충전하기 스타일 --- */
         .currency-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
@@ -494,7 +440,7 @@
                 <div class="filter-pill" onclick="applyFilter('income')" id="btn-filter-income">Incoming</div>
                 <div class="filter-pill" onclick="applyFilter('expense')" id="btn-filter-expense">Outgoing</div>
                 <div class="filter-pill" onclick="toggleSortDate()" id="btn-filter-date">Date <i class="fas fa-sort"></i></div>
-                <div class="filter-pill" onclick="openCategorySheet('filter')" id="btn-filter-category">Category</div>
+                <div class="filter-pill" onclick="openCategorySheet()" id="btn-filter-category">Category</div>
             </div>
             <div class="filter-reset-btn" onclick="resetFilters()">
                 <i class="fas fa-undo-alt"></i>
@@ -507,73 +453,14 @@
             </ul>
     </section>
 
-    <section class="page" id="page-transaction-detail">
-        <a class="back-link" data-target="page-history"><i class="fas fa-arrow-left"></i> 목록으로</a>
-        
-        <div style="padding:10px;">
-            <div class="detail-header">
-                <h2 style="margin-bottom:5px;">Transaction Details</h2>
-                <div class="detail-amount" id="detail-amount"></div>
-                <div class="detail-title" id="detail-title"></div>
-            </div>
-            
-            <div style="background:#fff; border-radius:15px; padding:20px; box-shadow:0 5px 20px rgba(0,0,0,0.03);">
-                <div class="detail-row">
-                    <span class="detail-label">Category</span>
-                    <div style="display:flex; align-items:center;">
-                        <span id="detail-category" class="detail-val"></span>
-                        <div class="cat-edit-btn" onclick="openCategorySheet('edit')"><i class="fas fa-pen"></i></div>
-                    </div>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">When</span>
-                    <span id="detail-when" class="detail-val"></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Where</span>
-                    <span id="detail-where" class="detail-val"></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Paid via</span>
-                    <div id="detail-paid-via" class="detail-val"></div>
-                </div>
-                <div class="detail-row" style="border-bottom:none;">
-                    <span class="detail-label">Note</span>
-                    <div id="detail-note-area" class="detail-val">
-                        </div>
-                </div>
-            </div>
-
-            <div class="split-btn-container">
-                <div class="split-btn" onclick="showToast('더치페이 요청 전송됨')">
-                    <div class="split-avatars">
-                        <div class="split-avatar"><i class="fas fa-user"></i></div>
-                        <div class="split-avatar"><i class="fas fa-user"></i></div>
-                    </div>
-                    Split this payment
-                </div>
-            </div>
-        </div>
-    </section>
-
     <div class="bottom-sheet-overlay" id="category-overlay" onclick="closeCategorySheet()"></div>
     <div class="bottom-sheet" id="category-sheet">
         <div class="sheet-title">카테고리 선택</div>
-        <div class="sheet-option" onclick="handleCategorySelect('Eating Out')">Eating Out <i class="fas fa-utensils"></i></div>
-        <div class="sheet-option" onclick="handleCategorySelect('Groceries')">Groceries <i class="fas fa-shopping-basket"></i></div>
-        <div class="sheet-option" onclick="handleCategorySelect('Housing')">Housing <i class="fas fa-home"></i></div>
-        <div class="sheet-option" onclick="handleCategorySelect('Shopping')">Shopping <i class="fas fa-shopping-bag"></i></div>
-        <div class="sheet-option" onclick="handleCategorySelect('Transport')">Transport <i class="fas fa-bus"></i></div>
-        <div class="sheet-option" onclick="handleCategorySelect('Transfer')">Transfer <i class="fas fa-exchange-alt"></i></div>
-    </div>
-
-    <div class="bottom-sheet-overlay" id="note-overlay" onclick="closeNoteSheet()"></div>
-    <div class="bottom-sheet" id="note-sheet">
-        <div class="sheet-title">메모 입력</div>
-        <div class="note-input-wrapper">
-            <input type="text" id="note-input" class="note-input" maxlength="30" placeholder="메모를 입력하세요 (30자 이내)">
-            <button class="btn primary" style="width:auto; padding:0 20px;" onclick="saveNote()">완료</button>
-        </div>
+        <div class="sheet-option" onclick="selectCategory('Eating Out')">Eating Out <i class="fas fa-utensils"></i></div>
+        <div class="sheet-option" onclick="selectCategory('Groceries')">Groceries <i class="fas fa-shopping-basket"></i></div>
+        <div class="sheet-option" onclick="selectCategory('Housing')">Housing <i class="fas fa-home"></i></div>
+        <div class="sheet-option" onclick="selectCategory('Shopping')">Shopping <i class="fas fa-shopping-bag"></i></div>
+        <div class="sheet-option" onclick="selectCategory('Transport')">Transport <i class="fas fa-bus"></i></div>
     </div>
 
     <section class="page" id="page-cards">
@@ -932,28 +819,22 @@
     // ==========================================
     const state = {
         totalAssetsKRW: 5000000,
-        // 거래 내역 데이터 (paymentMethod 추가: 'card', 'applepay', 'transfer' 등)
+        // 초기 거래 내역 데이터 (카테고리 추가)
         transactions: [
-            { id: 1, type: 'income', category:'Transfer', title: 'Mathias Bee', date: '29 Jul, 5:00pm', amount: 520000, status: 'Received', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg', paymentMethod:'transfer', note:'' },
-            { id: 2, type: 'expense', category:'Transport', title: 'Uber Ride', date: '24 Jul, 10:50pm', amount: 26000, status: 'Paid', avatarIcon: 'fab fa-uber', avatarBg: '#000', avatarColor: '#fff', paymentMethod:'applepay', note:'' },
-            { id: 3, type: 'income', category:'Transfer', title: 'John Doe', date: '30 Jun, 5:00am', amount: 4500000, status: 'Received', avatarInitial: 'JD', avatarBg: '#FCE4EC', avatarColor: '#C2185B', paymentMethod:'transfer', note:'' },
-            { id: 4, type: 'expense', category:'Shopping', title: 'Amazon', date: '26 Jun, 10:30am', amount: 420000, status: 'Paid', avatarIcon: 'fab fa-amazon', avatarBg: '#fff', avatarColor: '#333', paymentMethod:'card', note:'' },
-            { id: 5, type: 'expense', category:'Eating Out', title: 'Ayomide OA', date: '30 Jun, 8:20pm', amount: 30500, status: 'Sent', avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg', paymentMethod:'transfer', note:'' }
+            { id: 1, type: 'income', category:'Transfer', title: 'Mathias Bee', date: '29 Jul, 5:00pm', amount: 520000, status: 'Received', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
+            { id: 2, type: 'expense', category:'Transport', title: 'Uber Ride', date: '24 Jul, 10:50pm', amount: 26000, status: 'Paid', avatarIcon: 'fab fa-uber', avatarBg: '#000', avatarColor: '#fff' },
+            { id: 3, type: 'income', category:'Transfer', title: 'John Doe', date: '30 Jun, 5:00am', amount: 4500000, status: 'Received', avatarInitial: 'JD', avatarBg: '#FCE4EC', avatarColor: '#C2185B' },
+            { id: 4, type: 'expense', category:'Shopping', title: 'Amazon', date: '26 Jun, 10:30am', amount: 420000, status: 'Paid', avatarIcon: 'fab fa-amazon', avatarBg: '#fff', avatarColor: '#333' },
+            { id: 5, type: 'expense', category:'Eating Out', title: 'Ayomide OA', date: '30 Jun, 8:20pm', amount: 30500, status: 'Sent', avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg' }
         ]
     };
     
-    // 현재 선택된 거래 (상세보기용)
-    let currentDetailTxId = null;
-
     // 현재 필터 상태
     let activeFilter = {
-        type: null, 
-        category: null, 
-        sortDate: 'desc' 
+        type: null, // 'income' | 'expense'
+        category: null, // string
+        sortDate: 'desc' // 'desc' | 'asc'
     };
-
-    // 카테고리 시트 모드 ('filter' or 'edit')
-    let categorySheetMode = 'filter';
 
     const exchangeRates = { 
         USD: 1300, 
@@ -962,7 +843,12 @@
         JPY: 900 
     };
 
-    let transactionContext = { type: '', amount: 0, recipient: '' };
+    let transactionContext = {
+        type: '', 
+        amount: 0,
+        recipient: '',
+    };
+    
     let currentPin = "";
 
     function renderBalance() {
@@ -970,25 +856,30 @@
     }
 
     // ==========================================
-    // 내역 렌더링
+    // 내역 렌더링 (Dynamic + Filter)
     // ==========================================
     function renderHistory() {
         const list = document.getElementById('history-list');
         list.innerHTML = ''; 
 
+        // 1. 필터링
         let filtered = state.transactions.filter(t => {
             if (activeFilter.type && t.type !== activeFilter.type) return false;
             if (activeFilter.category && t.category !== activeFilter.category) return false;
             return true;
         });
 
-        if (activeFilter.sortDate === 'asc') filtered.sort((a, b) => a.id - b.id);
-        else filtered.sort((a, b) => b.id - a.id);
+        // 2. 정렬 (날짜 단순 문자열 비교 - 실제 앱에선 Date객체 사용 권장)
+        // 여기선 간단히 id(최신순) 혹은 역순으로 처리
+        if (activeFilter.sortDate === 'asc') {
+            filtered.sort((a, b) => a.id - b.id);
+        } else {
+            filtered.sort((a, b) => b.id - a.id);
+        }
 
         filtered.forEach(t => {
             const li = document.createElement('li');
             li.className = 'transaction-item';
-            li.onclick = () => openTransactionDetail(t.id); // 클릭 시 상세 이동
             
             let avatarHtml = '';
             if (t.avatarUrl) {
@@ -1023,80 +914,18 @@
     }
 
     // ==========================================
-    // [NEW] 상세 페이지 로직
-    // ==========================================
-    function openTransactionDetail(txId) {
-        const tx = state.transactions.find(t => t.id === txId);
-        if (!tx) return;
-        currentDetailTxId = txId;
-
-        document.getElementById('detail-amount').innerText = (tx.type === 'income' ? '+' : '-') + ' ₩' + tx.amount.toLocaleString();
-        document.getElementById('detail-amount').style.color = tx.type === 'income' ? 'var(--income-color)' : 'var(--expense-color)';
-        document.getElementById('detail-title').innerText = tx.title;
-        document.getElementById('detail-category').innerText = tx.category;
-        document.getElementById('detail-when').innerText = tx.date;
-        document.getElementById('detail-where').innerText = tx.title;
-
-        // 결제 수단 아이콘
-        const paidViaEl = document.getElementById('detail-paid-via');
-        if (tx.paymentMethod === 'applepay') {
-            paidViaEl.innerHTML = `<div class="payment-method-box"><i class="fab fa-apple pm-apple-icon"></i> Apple Pay</div>`;
-        } else if (tx.paymentMethod === 'card') {
-            paidViaEl.innerHTML = `<div class="payment-method-box"><div class="pm-card-icon"></div> 9876</div>`;
-        } else {
-             paidViaEl.innerHTML = `<div class="payment-method-box">Transfer</div>`;
-        }
-
-        renderNote(tx);
-        navigate('page-transaction-detail');
-    }
-
-    function renderNote(tx) {
-        const noteArea = document.getElementById('detail-note-area');
-        if (tx.note) {
-            noteArea.innerHTML = `<span class="note-content">${tx.note}</span>`;
-        } else {
-            noteArea.innerHTML = `<span class="note-add-link" onclick="openNoteSheet()">Add</span>`;
-        }
-    }
-
-    // --- Note Logic ---
-    function openNoteSheet() {
-        document.getElementById('note-input').value = '';
-        document.getElementById('note-sheet').classList.add('open');
-        document.getElementById('note-overlay').style.display = 'block';
-        setTimeout(() => document.getElementById('note-overlay').style.opacity = 1, 10);
-    }
-    
-    function closeNoteSheet() {
-        document.getElementById('note-sheet').classList.remove('open');
-        document.getElementById('note-overlay').style.opacity = 0;
-        setTimeout(() => document.getElementById('note-overlay').style.display = 'none', 300);
-    }
-
-    function saveNote() {
-        const val = document.getElementById('note-input').value;
-        if (!val) return;
-        
-        const tx = state.transactions.find(t => t.id === currentDetailTxId);
-        if (tx) {
-            tx.note = val;
-            renderNote(tx);
-            closeNoteSheet();
-            showToast('메모가 저장되었습니다.');
-        }
-    }
-
-    // ==========================================
-    // 필터 & 카테고리 로직 (통합)
+    // 필터링 로직
     // ==========================================
     function applyFilter(filterType) {
+        // 기존 카테고리 필터 해제
         activeFilter.category = null;
         updateFilterUI();
+
+        // 토글 로직
         if (activeFilter.type === filterType) {
-            activeFilter.type = null; 
+            activeFilter.type = null; // 끄기
         } else {
-            activeFilter.type = filterType; 
+            activeFilter.type = filterType; // 켜기
         }
         renderHistory();
         updateFilterUI();
@@ -1108,9 +937,7 @@
         updateFilterUI();
     }
 
-    // 모드에 따라 다르게 동작 (filter vs edit)
-    function openCategorySheet(mode) {
-        categorySheetMode = mode;
+    function openCategorySheet() {
         document.getElementById('category-sheet').classList.add('open');
         document.getElementById('category-overlay').style.display = 'block';
         setTimeout(() => document.getElementById('category-overlay').style.opacity = 1, 10);
@@ -1122,24 +949,13 @@
         setTimeout(() => document.getElementById('category-overlay').style.display = 'none', 300);
     }
 
-    function handleCategorySelect(catName) {
-        if (categorySheetMode === 'filter') {
-            activeFilter.type = null;
-            activeFilter.category = catName;
-            closeCategorySheet();
-            renderHistory();
-            updateFilterUI();
-        } else if (categorySheetMode === 'edit') {
-            // 상세 페이지에서 수정
-            const tx = state.transactions.find(t => t.id === currentDetailTxId);
-            if (tx) {
-                tx.category = catName;
-                document.getElementById('detail-category').innerText = catName;
-                renderHistory(); // 리스트 업데이트
-                closeCategorySheet();
-                showToast('카테고리가 변경되었습니다.');
-            }
-        }
+    function selectCategory(catName) {
+        // 타입 필터 초기화 후 카테고리 적용
+        activeFilter.type = null;
+        activeFilter.category = catName;
+        closeCategorySheet();
+        renderHistory();
+        updateFilterUI();
     }
 
     function resetFilters() {
@@ -1149,6 +965,7 @@
     }
 
     function updateFilterUI() {
+        // 버튼 활성화 상태 스타일링
         const btnIncome = document.getElementById('btn-filter-income');
         const btnExpense = document.getElementById('btn-filter-expense');
         const btnDate = document.getElementById('btn-filter-date');
@@ -1180,7 +997,7 @@
     }
 
     // ==========================================
-    // 네비게이션
+    // 네비게이션 로직 (하단바 유지 조건 수정)
     // ==========================================
     function navigate(targetId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1188,6 +1005,8 @@
         if(targetPage) targetPage.classList.add('active');
         
         const bottomNav = document.querySelector('.bottom-nav');
+        
+        // [수정] 하단바를 유지해야 하는 메인 페이지 목록
         const mainPages = ['page-home', 'page-history', 'page-cards', 'page-all'];
         
         if (mainPages.includes(targetId)) {
@@ -1219,22 +1038,31 @@
     }
 
     // ==========================================
-    // 기타 로직 (검색, 송금, 충전 등)
+    // 내역 검색 필터링 로직 (기존 유지)
     // ==========================================
     function filterTransactions(val) {
         const list = document.getElementById('history-list');
         const items = list.getElementsByTagName('li');
         const searchVal = val.toLowerCase();
+
         for (let item of items) {
             const name = item.querySelector('.t-title').innerText.toLowerCase();
-            item.style.display = name.includes(searchVal) ? 'flex' : 'none';
+            if (name.includes(searchVal)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
         }
     }
 
+    // ==========================================
+    // 비밀번호(PIN) 로직
+    // ==========================================
     function startPasswordFlow(type, amount, recipientName) {
         transactionContext = { type, amount, recipient: recipientName };
         currentPin = "";
         updatePinDisplay();
+
         const msgEl = document.getElementById('pin-message-text');
         if (type === 'transfer') {
             msgEl.innerHTML = `${recipientName}님께<br>${amount.toLocaleString()}KRW를 송금합니다.`;
@@ -1248,7 +1076,10 @@
         if (currentPin.length < 6) {
             currentPin += num;
             updatePinDisplay();
-            if (currentPin.length === 6) setTimeout(checkPin, 200);
+            
+            if (currentPin.length === 6) {
+                setTimeout(checkPin, 200);
+            }
         }
     }
 
@@ -1275,17 +1106,20 @@
         navigate('page-home');
     }
 
+    // ==========================================
+    // 완료(Success) 및 거래 추가 로직
+    // ==========================================
     function showSuccessPage() {
         const { type, amount, recipient } = transactionContext;
         const titleEl = document.getElementById('success-title');
         const descEl = document.getElementById('success-desc');
 
+        // 새로운 거래 기록 생성
         const newTx = {
             id: Date.now(),
             date: getFormattedDate(),
             amount: amount,
             title: recipient,
-            note: '' // 기본 빈 메모
         };
 
         if (type === 'transfer') {
@@ -1299,7 +1133,6 @@
             newTx.avatarInitial = recipient.charAt(0).toUpperCase();
             newTx.avatarBg = '#E0F7FA'; 
             newTx.avatarColor = '#006064';
-            newTx.paymentMethod = 'transfer'; // 송금 타입
 
         } else {
             titleEl.innerText = "충전 완료!";
@@ -1312,12 +1145,12 @@
             newTx.avatarIcon = 'fas fa-wallet';
             newTx.avatarBg = '#FFF3E0';
             newTx.avatarColor = '#E65100';
-            newTx.paymentMethod = 'card'; // 충전은 카드로 가정
         }
         
         state.transactions.unshift(newTx);
         renderHistory(); 
         renderBalance(); 
+        
         navigate('page-success');
     }
 
@@ -1333,6 +1166,9 @@
         navigate('page-home');
     }
 
+    // ==========================================
+    // 송금하기 로직
+    // ==========================================
     function selectRecipient(name, info) {
         document.getElementById('selected-recipient-name').innerText = name;
         document.getElementById('selected-recipient-info').innerText = info;
@@ -1350,11 +1186,16 @@
     function submitTransfer() {
         const val = parseInt(document.getElementById('transfer-amount').value) || 0;
         const name = document.getElementById('selected-recipient-name').innerText;
+        
         if(val <= 0) return showToast('금액을 올바르게 입력해주세요');
         if(val > state.totalAssetsKRW) return showToast('잔액이 부족합니다');
+        
         startPasswordFlow('transfer', val, name);
     }
 
+    // ==========================================
+    // 충전하기 로직
+    // ==========================================
     let chargeAmount = 0;
     let selectedCurrency = 'USD';
     let selectedMethod = null;
