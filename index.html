@@ -190,31 +190,12 @@
             font-size: 9px; padding: 2px 4px; border-radius: 6px; border: 2px solid white;
         }
 
-        /* --- [NEW] Apple Pay Badge Style --- */
-        .apple-pay-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #333;
-            border-radius: 4px;
-            padding: 0 4px;
-            height: 18px;
-            gap: 2px;
+        /* --- [NEW] Payment Logo Style --- */
+        .payment-logo-img {
+            height: 20px;
+            width: auto;
             vertical-align: middle;
             margin-left: 6px;
-            color: #333;
-            background-color: #fff;
-        }
-        .apple-pay-badge i {
-            font-size: 12px;
-        }
-        .apple-pay-badge span {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-weight: 600;
-            font-size: 11px;
-            line-height: 1;
-            position: relative;
-            top: 1px;
         }
 
         /* --- [NEW] Transaction Details Page --- */
@@ -1040,7 +1021,8 @@
             // [NEW] Apple Pay Logo Logic for List
             let titleHtml = t.title;
             if (t.paymentMethod === 'applepay') {
-                titleHtml += ` <span class="apple-pay-badge"><i class="fab fa-apple"></i><span>Pay</span></span>`;
+                // Official Acceptance Mark (SVG from Wikimedia)
+                titleHtml += ` <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_Acceptance_Mark.svg" alt="Apple Pay" class="payment-logo-img">`;
             }
 
             li.innerHTML = `
@@ -1077,7 +1059,8 @@
 
         const paidViaEl = document.getElementById('detail-paid-via');
         if (tx.paymentMethod === 'applepay') {
-            paidViaEl.innerHTML = `<div class="payment-method-box"><span class="apple-pay-badge"><i class="fab fa-apple"></i><span>Pay</span></span></div>`;
+             // Official Acceptance Mark in Detail View
+             paidViaEl.innerHTML = `<div class="payment-method-box"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_Acceptance_Mark.svg" alt="Apple Pay" class="payment-logo-img" style="height:22px;"></div>`;
         } else if (tx.paymentMethod === 'card') {
             paidViaEl.innerHTML = `<div class="payment-method-box"><div class="pm-card-icon"></div> 9876</div>`;
         } else {
